@@ -1,56 +1,208 @@
-<!DOCTYPE html><html><head><style>
-body{font-family:Arial,sans-serif;background:#0f1117;color:#e1e4e8;padding:20px}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.kpi{background:#1c1f27;border:1px solid #2d3139;border-radius:8px;padding:16px}
-.kpi-label{font-size:10px;text-transform:uppercase;color:#6b7280;margin-bottom:6px}
-.kpi-value{font-size:28px;font-weight:700;color:#fff}
-.kpi-sub{font-size:11px;color:#6b7280;margin-top:4px}
-.green{color:#22c55e}.amber{color:#f59e0b}
-.section{background:#1c1f27;border:1px solid #2d3139;border-radius:8px;padding:16px;margin-bottom:16px}
-.section-title{font-size:11px;text-transform:uppercase;color:#6b7280;margin-bottom:12px;letter-spacing:.06em}
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.bar-label{font-size:11px;color:#d1d5db;width:150px;flex-shrink:0}
-.bar-track{flex:1;background:#2d3139;border-radius:3px;height:6px}
-.bar-fill{height:6px;border-radius:3px}
-.b-blue{background:#3b82f6}.b-green{background:#22c55e}.b-red{background:#ef4444}.b-amber{background:#f59e0b}
-.bar-count{font-size:11px;color:#6b7280;width:24px;text-align:right}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sunquell Mission Control</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0c10;color:#e1e4e8;min-height:100vh;padding:28px}
+.header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;border-bottom:1px solid #1e2228;padding-bottom:20px}
+.header-left h1{font-size:24px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.header-left p{font-size:13px;color:#4b5563;margin-top:4px}
+.header-right{text-align:right;font-size:12px;color:#4b5563}
+.header-right span{display:block;font-size:20px;font-weight:700;color:#22c55e}
+
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:#111318;border:1px solid #1e2228;border-radius:10px;padding:18px 20px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent)}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#4b5563;margin-bottom:10px}
+.kpi-value{font-size:26px;font-weight:700;color:#fff;line-height:1}
+.kpi-sub{font-size:11px;color:#374151;margin-top:6px}
+.kpi-sub.up{color:#22c55e}
+.kpi-sub.warn{color:#f59e0b}
+.kpi-sub.danger{color:#ef4444}
+
+.row2{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:14px;margin-bottom:20px}
+.row3{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-bottom:20px}
+.card{background:#111318;border:1px solid #1e2228;border-radius:10px;padding:20px}
+.card-title{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#4b5563;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--dot,#3b82f6)}
+
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{font-size:12px;color:#9ca3af;width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:#1a1d24;border-radius:3px;height:5px}
+.bar-fill{height:5px;border-radius:3px}
+.bar-val{font-size:11px;color:#6b7280;width:28px;text-align:right;flex-shrink:0}
+
 table{width:100%;border-collapse:collapse}
-th{font-size:10px;text-transform:uppercase;color:#6b7280;text-align:left;padding:6px 10px;border-bottom:1px solid #2d3139}
-td{font-size:12px;padding:8px 10px;border-bottom:1px solid #1a1d24;color:#d1d5db}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#374151;text-align:left;padding:7px 10px;border-bottom:1px solid #1a1d24}
+td{font-size:12px;padding:9px 10px;border-bottom:1px solid #111318;color:#9ca3af}
 tr:last-child td{border-bottom:none}
-.amount{font-weight:700;color:#fff}
-h1{font-size:20px;font-weight:700;margin-bottom:4px}
-.sub{font-size:12px;color:#6b7280;margin-bottom:20px}
-</style></head><body>
-<h1>Sunquell Daily Dashboard</h1>
-<p class=sub>March 31, 2026 - Western GTA - Live from Zoho CRM</p>
-<div class=kpi-grid>
-<div class=kpi><div class=kpi-label>New Leads This Month</div><div class=kpi-value>54</div><div class=kpi-sub>161 total in CRM</div></div>
-<div class=kpi><div class=kpi-label>Active Pipeline</div><div class=kpi-value>,377</div><div class="kpi-sub amber">Quote Sent + Send Quote + Drip</div></div>
-<div class=kpi><div class=kpi-label>Closed Revenue (March)</div><div class=kpi-value>,883</div><div class="kpi-sub green">5 deals paid</div></div>
-<div class=kpi><div class=kpi-label>Follow-Ups Due Today</div><div class=kpi-value>0</div><div class=kpi-sub>No overdue tasks</div></div>
+tr:hover td{background:#13161d}
+.amount{font-weight:700;color:#fff;font-size:13px}
+.stage-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+.badge-hot{background:#052e16;color:#4ade80}
+.badge-warm{background:#1c1917;color:#fb923c}
+.badge-cold{background:#1e1b4b;color:#818cf8}
+.priority-high{color:#ef4444;font-weight:600}
+.priority-med{color:#f59e0b}
+.priority-low{color:#6b7280}
+
+.metric-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #1a1d24}
+.metric-row:last-child{border-bottom:none}
+.metric-name{font-size:12px;color:#9ca3af}
+.metric-val{font-size:13px;font-weight:600;color:#fff}
+
+.funnel-item{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.funnel-bar{flex:1;background:#1a1d24;border-radius:3px;height:22px;position:relative;overflow:hidden}
+.funnel-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;white-space:nowrap}
+.funnel-label{font-size:11px;color:#6b7280;width:120px;flex-shrink:0}
+.funnel-count{font-size:11px;color:#4b5563;width:24px;text-align:right;flex-shrink:0}
+
+.footer{text-align:center;font-size:11px;color:#1f2937;margin-top:8px;padding-top:16px;border-top:1px solid #111318}
+.dot-green{--dot:#22c55e}.dot-blue{--dot:#3b82f6}.dot-amber{--dot:#f59e0b}.dot-red{--dot:#ef4444}.dot-purple{--dot:#a855f7}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>Sunquell Mission Control</h1>
+    <p>Western GTA · Window Security Film · March 31, 2026</p>
+  </div>
+  <div class="header-right">
+    March Revenue
+    <span>$9,883</span>
+    5 deals closed
+  </div>
 </div>
-<div class=section><div class=section-title>Lead Source Breakdown</div>
-<div class=bar-row><span class=bar-label>Meta Ads</span><div class=bar-track><div class="bar-fill b-green" style=width:100%></div></div><span class=bar-count>80</span></div>
-<div class=bar-row><span class=bar-label>Facebook</span><div class=bar-track><div class="bar-fill b-blue" style=width:64%></div></div><span class=bar-count>51</span></div>
-<div class=bar-row><span class=bar-label>Trade Show</span><div class=bar-track><div class="bar-fill b-red" style=width:31%></div></div><span class=bar-count>25</span></div>
-<div class=bar-row><span class=bar-label>Employee Referral</span><div class=bar-track><div class="bar-fill b-green" style=width:2%></div></div><span class=bar-count>1</span></div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi" style="--accent:#22c55e">
+    <div class="kpi-label">New Leads (March)</div>
+    <div class="kpi-value">53</div>
+    <div class="kpi-sub up">↑ Active month</div>
+  </div>
+  <div class="kpi" style="--accent:#3b82f6">
+    <div class="kpi-label">Total CRM Leads</div>
+    <div class="kpi-value">160</div>
+    <div class="kpi-sub">Across all stages</div>
+  </div>
+  <div class="kpi" style="--accent:#f59e0b">
+    <div class="kpi-label">Hot Pipeline</div>
+    <div class="kpi-value">$43,040</div>
+    <div class="kpi-sub warn">Quote Sent + Send Quote</div>
+  </div>
+  <div class="kpi" style="--accent:#ef4444">
+    <div class="kpi-label">Stalling Pipeline</div>
+    <div class="kpi-value">$17,033</div>
+    <div class="kpi-sub danger">Needs recovery action</div>
+  </div>
+  <div class="kpi" style="--accent:#a855f7">
+    <div class="kpi-label">Avg Deal Size</div>
+    <div class="kpi-value">$2,228</div>
+    <div class="kpi-sub">Closed deals (all time)</div>
+  </div>
 </div>
-<div class=section><div class=section-title>Deal Stage Funnel</div>
-<div class=bar-row><span class=bar-label>Not Interested/MIA</span><div class=bar-track><div class="bar-fill b-red" style=width:100%></div></div><span class=bar-count>44</span></div>
-<div class=bar-row><span class=bar-label>CP DRIP</span><div class=bar-track><div class="bar-fill b-blue" style=width:89%></div></div><span class=bar-count>39</span></div>
-<div class=bar-row><span class=bar-label>2025 Historical</span><div class=bar-track><div class="bar-fill b-blue" style=width:68%></div></div><span class=bar-count>30</span></div>
-<div class=bar-row><span class=bar-label>Quote Sent</span><div class=bar-track><div class="bar-fill b-green" style=width:34%></div></div><span class=bar-count>15</span></div>
-<div class=bar-row><span class=bar-label>Stalling</span><div class=bar-track><div class="bar-fill b-amber" style=width:25%></div></div><span class=bar-count>11</span></div>
-<div class=bar-row><span class=bar-label>Paid</span><div class=bar-track><div class="bar-fill b-green" style=width:11%></div></div><span class=bar-count>5</span></div>
-<div class=bar-row><span class=bar-label>Send Quote</span><div class=bar-track><div class="bar-fill b-amber" style=width:9%></div></div><span class=bar-count>4</span></div>
+
+<!-- ROW 2: Sources + Stage Funnel + Deal Stats -->
+<div class="row2">
+
+  <div class="card dot-green">
+    <div class="card-title"><span></span>Lead Source Quality</div>
+    <div class="bar-row"><span class="bar-label">Meta Ads</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#22c55e"></div></div><span class="bar-val">80</span></div>
+    <div class="bar-row"><span class="bar-label">Facebook</span><div class="bar-track"><div class="bar-fill" style="width:64%;background:#3b82f6"></div></div><span class="bar-val">51</span></div>
+    <div class="bar-row"><span class="bar-label">Trade Show</span><div class="bar-track"><div class="bar-fill" style="width:31%;background:#ef4444"></div></div><span class="bar-val">25</span></div>
+    <div class="bar-row"><span class="bar-label">Employee Referral</span><div class="bar-track"><div class="bar-fill" style="width:2%;background:#a855f7"></div></div><span class="bar-val">1</span></div>
+    <div class="bar-row"><span class="bar-label">Other</span><div class="bar-track"><div class="bar-fill" style="width:2%;background:#6b7280"></div></div><span class="bar-val">3</span></div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1a1d24;font-size:11px;color:#4b5563">
+      ✅ Meta Ads = best quality &nbsp;|&nbsp; ❌ Trade Show = ~0% conversion
+    </div>
+  </div>
+
+  <div class="card dot-blue">
+    <div class="card-title"><span></span>Deal Stage Funnel</div>
+    <div class="funnel-item"><span class="funnel-label">Not Int / MIA</span><div class="funnel-bar"><div class="funnel-fill" style="width:100%;background:#374151">44</div></div><span class="funnel-count">44</span></div>
+    <div class="funnel-item"><span class="funnel-label">CP Drip</span><div class="funnel-bar"><div class="funnel-fill" style="width:89%;background:#1d4ed8">39</div></div><span class="funnel-count">39</span></div>
+    <div class="funnel-item"><span class="funnel-label">2025 Historical</span><div class="funnel-bar"><div class="funnel-fill" style="width:68%;background:#374151">30</div></div><span class="funnel-count">30</span></div>
+    <div class="funnel-item"><span class="funnel-label">Quote Sent 🔥</span><div class="funnel-bar"><div class="funnel-fill" style="width:34%;background:#15803d">15</div></div><span class="funnel-count">15</span></div>
+    <div class="funnel-item"><span class="funnel-label">Stalling ⚠️</span><div class="funnel-bar"><div class="funnel-fill" style="width:25%;background:#92400e">11</div></div><span class="funnel-count">11</span></div>
+    <div class="funnel-item"><span class="funnel-label">Paid ✅</span><div class="funnel-bar"><div class="funnel-fill" style="width:11%;background:#166534">5</div></div><span class="funnel-count">5</span></div>
+    <div class="funnel-item"><span class="funnel-label">Send Quote</span><div class="funnel-bar"><div class="funnel-fill" style="width:9%;background:#78350f">4</div></div><span class="funnel-count">4</span></div>
+  </div>
+
+  <div class="card dot-amber">
+    <div class="card-title"><span></span>Pipeline Breakdown</div>
+    <div class="metric-row"><span class="metric-name">Total Active Pipeline</span><span class="metric-val">$45,247</span></div>
+    <div class="metric-row"><span class="metric-name">Hot (Quote Stage)</span><span class="metric-val" style="color:#22c55e">$43,040</span></div>
+    <div class="metric-row"><span class="metric-name">Stalling Deals</span><span class="metric-val" style="color:#ef4444">$17,033</span></div>
+    <div class="metric-row"><span class="metric-name">March Closed Revenue</span><span class="metric-val" style="color:#22c55e">$9,883</span></div>
+    <div class="metric-row"><span class="metric-name">Avg Closed Deal</span><span class="metric-val">$2,228</span></div>
+    <div class="metric-row"><span class="metric-name">Total Deals in CRM</span><span class="metric-val">157</span></div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1a1d24;font-size:11px;color:#4b5563">
+      💡 $17K stalling = biggest quick-win opportunity
+    </div>
+  </div>
+
 </div>
-<div class=section><div class=section-title>Hot Pipeline - Action Required</div>
-<table><thead><tr><th>Deal</th><th>Stage</th><th>Amount</th><th>Priority</th></tr></thead><tbody>
-<tr><td>Shawn And</td><td>Quote Sent</td><td class=amount>,251</td><td>Call this week</td></tr>
-<tr><td>Mohika Sehgal</td><td>Quote Sent</td><td class=amount>,209</td><td>Call in 48 hrs</td></tr>
-<tr><td>Gary Xu</td><td>Stalling</td><td class=amount>,997</td><td>Recovery email</td></tr>
-<tr><td>Juan OROZCO Duque</td><td>Stalling</td><td class=amount>,473</td><td>Recovery email</td></tr>
-<tr><td>Dan Skrobot</td><td>Quote Sent</td><td class=amount>,021</td><td>Close date Apr 16</td></tr>
-</tbody></table></div>
-</body></html>
+
+<!-- ROW 3: Hot Pipeline Table + Tomorrow -->
+<div class="row3">
+
+  <div class="card dot-green">
+    <div class="card-title"><span></span>Hot Pipeline — Action Required This Week</div>
+    <table>
+      <thead><tr><th>#</th><th>Contact</th><th>Stage</th><th>Value</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td style="color:#4b5563">1</td><td style="color:#e1e4e8;font-weight:500">Shawn And</td><td><span class="stage-badge badge-hot">Quote Sent</span></td><td class="amount">$10,251</td><td class="priority-high">📞 Call today</td></tr>
+        <tr><td style="color:#4b5563">2</td><td style="color:#e1e4e8;font-weight:500">Mohika Sehgal</td><td><span class="stage-badge badge-hot">Quote Sent</span></td><td class="amount">$7,209</td><td class="priority-high">📞 48hrs</td></tr>
+        <tr><td style="color:#4b5563">3</td><td style="color:#e1e4e8;font-weight:500">Gary Xu</td><td><span class="stage-badge badge-warm">Stalling</span></td><td class="amount">$5,997</td><td class="priority-med">✉️ Recovery</td></tr>
+        <tr><td style="color:#4b5563">4</td><td style="color:#e1e4e8;font-weight:500">Paolo Empire</td><td><span class="stage-badge badge-hot">Send Quote</span></td><td class="amount">$4,341</td><td class="priority-high">📋 Send now</td></tr>
+        <tr><td style="color:#4b5563">5</td><td style="color:#e1e4e8;font-weight:500">Juan OROZCO Duque</td><td><span class="stage-badge badge-warm">Stalling</span></td><td class="amount">$4,473</td><td class="priority-med">✉️ Recovery</td></tr>
+        <tr><td style="color:#4b5563">6</td><td style="color:#e1e4e8;font-weight:500">Dan Skrobot</td><td><span class="stage-badge badge-hot">Quote Sent</span></td><td class="amount">$4,020</td><td class="priority-med">📞 Apr 16 close</td></tr>
+        <tr><td style="color:#4b5563">7</td><td style="color:#e1e4e8;font-weight:500">Ravinder S. Sandhu</td><td><span class="stage-badge badge-hot">Quote Sent</span></td><td class="amount">$3,540</td><td class="priority-med">📞 Follow up</td></tr>
+        <tr><td style="color:#4b5563">8</td><td style="color:#e1e4e8;font-weight:500">Dominic Ruso</td><td><span class="stage-badge badge-hot">Quote Sent</span></td><td class="amount">$3,207</td><td class="priority-med">📞 Follow up</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card dot-purple">
+    <div class="card-title"><span></span>Tomorrow's Schedule</div>
+    <div class="metric-row">
+      <div>
+        <div style="font-size:12px;color:#e1e4e8;font-weight:500">IMC Meeting</div>
+        <div style="font-size:11px;color:#4b5563;margin-top:2px">2:30 – 5:30 PM · 3 hours</div>
+      </div>
+      <span class="metric-val" style="color:#a855f7">🏢</span>
+    </div>
+    <div class="metric-row">
+      <div>
+        <div style="font-size:12px;color:#e1e4e8;font-weight:500">LOI Labs — Huddle #4</div>
+        <div style="font-size:11px;color:#4b5563;margin-top:2px">3:30 – 4:30 PM</div>
+      </div>
+      <span class="metric-val" style="color:#3b82f6">⚡</span>
+    </div>
+    <div class="metric-row">
+      <div>
+        <div style="font-size:12px;color:#22c55e;font-weight:600">Sunquell Quote — Krunal Trivedi</div>
+        <div style="font-size:11px;color:#4b5563;margin-top:2px">4:30 – 5:15 PM · Comprehensive tier</div>
+      </div>
+      <span class="metric-val" style="color:#22c55e">💰</span>
+    </div>
+    <div style="margin-top:16px;padding:12px;background:#0d1117;border-radius:6px;border:1px solid #1e2228">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:6px">Krunal Trivedi — CRM Notes</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.5">Meta Ads lead · Comprehensive budget ($2,500+) · Quote scheduled · Potential $3K–$8K deal. Pull his CRM record before the call.</div>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1a1d24">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:8px">Key Insight</div>
+      <div style="font-size:11px;color:#6b7280;line-height:1.6">Trade Show = dead channel (near 0% conversion). Shift all spend to Meta Ads. Employee referrals close at 3–5x rate — build a referral program.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Sunquell Mission Control · Built by Brian · Data live from Zoho CRM API · March 31, 2026 · Refreshed daily</div>
+
+</body>
+</html>
