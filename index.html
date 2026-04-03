@@ -181,6 +181,7 @@ tr:hover td{background:#0d1117}
   </div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('crm')"><span class="tab-dot" style="background:#22c55e"></span>CRM &amp; Sales</button>
+    <button class="tab" onclick="showTab('tasks')"><span class="tab-dot" style="background:#ef4444"></span>Tasks <span id="task-badge" style="background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px"></span></button>
     <button class="tab" onclick="showTab('history')"><span class="tab-dot" style="background:#3b82f6"></span>Historical Stats</button>
     <button class="tab" onclick="showTab('agents')"><span class="tab-dot" style="background:#a855f7"></span>Agent Control</button>
     <button class="tab" onclick="showTab('pipeline')"><span class="tab-dot" style="background:#f59e0b"></span>Pipeline</button>
@@ -351,6 +352,67 @@ tr:hover td{background:#0d1117}
         <div class="action-text"><strong>Build a referral program</strong> — 1 referral in 160 leads. Even $100 off per referral pays for itself on the first close.</div>
       </div>
     </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB: ZOHO TASKS -->
+<div class="page" id="page-tasks">
+
+  <div class="kpi-grid kpi-grid-4" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#ef4444"></div>
+      <div class="kpi-label">Overdue</div>
+      <div class="kpi-value" id="t-overdue" style="color:#ef4444">—</div>
+      <div class="kpi-delta delta-danger">Needs action now</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#f59e0b"></div>
+      <div class="kpi-label">Due Today</div>
+      <div class="kpi-value" id="t-today" style="color:#f59e0b">—</div>
+      <div class="kpi-delta delta-warn">Due Apr 3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Upcoming (7 days)</div>
+      <div class="kpi-value" id="t-upcoming">—</div>
+      <div class="kpi-delta delta-neutral">Apr 4–10</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Total Open</div>
+      <div class="kpi-value" id="t-total">—</div>
+      <div class="kpi-delta delta-neutral">All active tasks</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Daniel's Tasks</div>
+        <div class="card-badge" id="daniel-count">—</div>
+      </div>
+      <div id="daniel-tasks"><div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">Loading...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Madison's Tasks</div>
+        <div class="card-badge" id="madison-count">—</div>
+      </div>
+      <div id="madison-tasks"><div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">Loading...</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">All Open Tasks — Sorted by Due Date</div>
+      <div class="card-badge">Live from Zoho CRM</div>
+    </div>
+    <table>
+      <thead><tr><th>Task</th><th>Contact</th><th>Owner</th><th>Due Date</th><th>Status</th></tr></thead>
+      <tbody id="all-tasks-body"><tr><td colspan="5" style="text-align:center;color:var(--ghost);padding:20px">Loading tasks...</td></tr></tbody>
+    </table>
+    <div style="margin-top:12px;font-size:10px;color:var(--ghost);text-align:right">Last synced: <span id="tasks-sync-time">—</span> · Data from Zoho CRM</div>
   </div>
 
 </div>
@@ -691,9 +753,87 @@ function showTab(name){
   document.getElementById('page-'+name).classList.add('active');
   event.currentTarget.classList.add('active');
   // init charts lazily
+  if(name==='tasks')renderTasks();
   if(name==='history')initHistoryCharts();
   if(name==='pipeline')initPipelineChart();
 }
+
+// ZOHO TASKS DATA (baked in at build time — Apr 3 2026)
+const TASKS = [
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-04",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-03",contact:"Peter Mammone",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"Pat Palleschi",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-05-07",contact:"James Arniotis",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-10",contact:"Denice Takimoto",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up text",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"In Progress",due:"2026-03-30",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up call",status:"Not Due Yet",due:"2026-04-16",contact:"Dan Skrobot",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-05-14",contact:"—",owner:"Madison Parsons"},
+  {subject:"See if she sent measurements",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Has been ghosting — try again",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up after vacation",status:"Not Due Yet",due:"2026-04-23",contact:"Edward Arzanyan",owner:"Madison Parsons"},
+  {subject:"Follow up kindly",status:"Not Due Yet",due:"2026-04-19",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-19",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up evening",status:"In Progress",due:"2026-03-13",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-16",contact:"Fernando Elizondo",owner:"Madison Parsons"},
+  {subject:"Follow up call",status:"Not Due Yet",due:"2026-05-06",contact:"Carmelita Flaim",owner:"Madison Parsons"},
+  {subject:"FOLLOW UP",status:"Not Due Yet",due:"2026-06-01",contact:"—",owner:"Madison Parsons"},
+];
+
+function renderTasks(){
+  const today = new Date('2026-04-03');
+  const in7 = new Date('2026-04-10');
+  const open = TASKS.filter(t=>t.status!=='Completed');
+  const overdue = open.filter(t=>new Date(t.due)<today);
+  const dueToday = open.filter(t=>t.due==='2026-04-03');
+  const upcoming = open.filter(t=>{const d=new Date(t.due);return d>today&&d<=in7;});
+
+  document.getElementById('t-overdue').textContent=overdue.length;
+  document.getElementById('t-today').textContent=dueToday.length;
+  document.getElementById('t-upcoming').textContent=upcoming.length;
+  document.getElementById('t-total').textContent=open.length;
+  document.getElementById('task-badge').textContent=overdue.length+dueToday.length;
+
+  const sorted = [...open].sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const daniel = sorted.filter(t=>t.owner==='Daniel Mueller');
+  const madison = sorted.filter(t=>t.owner==='Madison Parsons');
+
+  document.getElementById('daniel-count').textContent=daniel.length+' tasks';
+  document.getElementById('madison-count').textContent=madison.length+' tasks';
+
+  function taskRows(list){
+    if(!list.length) return '<div style="color:var(--ghost);font-size:12px;padding:12px 0">No open tasks</div>';
+    return list.slice(0,8).map(t=>{
+      const d=new Date(t.due);
+      const overdue=d<today;
+      const dueTd=t.due==='2026-04-03';
+      const color=overdue?'var(--red)':dueTd?'var(--amber)':'var(--dim)';
+      const badge=overdue?'<span class="badge b-red">Overdue</span>':dueTd?'<span class="badge b-amber">Today</span>':'<span class="badge b-gray">'+t.due.slice(5)+'</span>';
+      return `<div class="task-row"><div><div class="task-title">${t.subject}</div><div class="task-meta" style="margin-top:3px">${t.contact!=='—'?'👤 '+t.contact:''}</div></div><div style="margin-left:auto">${badge}</div></div>`;
+    }).join('');
+  }
+
+  document.getElementById('daniel-tasks').innerHTML=taskRows(daniel);
+  document.getElementById('madison-tasks').innerHTML=taskRows(madison);
+
+  const tbody=document.getElementById('all-tasks-body');
+  tbody.innerHTML=sorted.map(t=>{
+    const d=new Date(t.due);
+    const overdue=d<today;
+    const dueTd=t.due==='2026-04-03';
+    const badge=overdue?'<span class="badge b-red">Overdue</span>':dueTd?'<span class="badge b-amber">Today</span>':'<span class="badge b-gray">'+t.due+'</span>';
+    const statusBadge=t.status==='In Progress'?'<span class="badge b-blue">In Progress</span>':'<span class="badge b-gray">Scheduled</span>';
+    return `<tr><td class="td-name">${t.subject}</td><td style="color:var(--muted);font-size:12px">${t.contact}</td><td style="color:var(--dim);font-size:11px">${t.owner.split(' ')[0]}</td><td>${badge}</td><td>${statusBadge}</td></tr>`;
+  }).join('');
+
+  document.getElementById('tasks-sync-time').textContent='Apr 3, 2026 3:15 PM EDT';
+}
+
+renderTasks();
 
 // CHART DEFAULTS
 Chart.defaults.color='#6e7681';
