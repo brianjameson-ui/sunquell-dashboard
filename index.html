@@ -182,6 +182,7 @@ tr:hover td{background:#0d1117}
   <div class="tabs">
     <button class="tab active" onclick="showTab('crm')"><span class="tab-dot" style="background:#22c55e"></span>CRM &amp; Sales</button>
     <button class="tab" onclick="showTab('tasks')"><span class="tab-dot" style="background:#ef4444"></span>Tasks <span id="task-badge" style="background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px"></span></button>
+    <button class="tab" onclick="showTab('approvals')"><span class="tab-dot" style="background:#8b5cf6"></span>Approvals <span id="approval-badge" style="background:#8b5cf6;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px"></span></button>
     <button class="tab" onclick="showTab('history')"><span class="tab-dot" style="background:#3b82f6"></span>Historical Stats</button>
     <button class="tab" onclick="showTab('agents')"><span class="tab-dot" style="background:#a855f7"></span>Agent Control</button>
     <button class="tab" onclick="showTab('pipeline')"><span class="tab-dot" style="background:#f59e0b"></span>Pipeline</button>
@@ -413,6 +414,69 @@ tr:hover td{background:#0d1117}
       <tbody id="all-tasks-body"><tr><td colspan="5" style="text-align:center;color:var(--ghost);padding:20px">Loading tasks...</td></tr></tbody>
     </table>
     <div style="margin-top:12px;font-size:10px;color:var(--ghost);text-align:right">Last synced: <span id="tasks-sync-time">—</span> · Data from Zoho CRM</div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB: APPROVALS -->
+<div class="page" id="page-approvals">
+
+  <div class="kpi-grid kpi-grid-4" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#8b5cf6"></div>
+      <div class="kpi-label">Needs Approval</div>
+      <div class="kpi-value" id="a-pending" style="color:#bc8cff">—</div>
+      <div class="kpi-delta delta-warn">Awaiting Daniel</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Approved</div>
+      <div class="kpi-value" id="a-approved" style="color:#58a6ff">—</div>
+      <div class="kpi-delta delta-neutral">Ready to execute</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#ef4444"></div>
+      <div class="kpi-label">Needs Revision</div>
+      <div class="kpi-value" id="a-revise" style="color:#f87171">—</div>
+      <div class="kpi-delta delta-danger">Waiting on edits</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Total Queue</div>
+      <div class="kpi-value" id="a-total">—</div>
+      <div class="kpi-delta delta-neutral">Approvals + drafts + tasks</div>
+    </div>
+  </div>
+
+  <div class="grid-2-1">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Approval Queue</div>
+        <div class="card-badge">Your command inbox</div>
+      </div>
+      <div id="approval-list"></div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-header">
+          <div class="card-title">Decision Rules</div>
+        </div>
+        <div class="action-item"><div class="action-dot" style="background:#3b82f6"></div><div class="action-text"><strong>Approve</strong> — greenlight the email, task, or content.</div></div>
+        <div class="action-item"><div class="action-dot" style="background:#ef4444"></div><div class="action-text"><strong>Reject</strong> — do not run it.</div></div>
+        <div class="action-item"><div class="action-dot" style="background:#8b5cf6"></div><div class="action-text"><strong>Send Back</strong> — keep the item, but mark it for revision with your comments.</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Queue Coverage</div>
+          <div class="card-badge">What shows up here</div>
+        </div>
+        <div class="action-item"><div class="action-dot" style="background:#22c55e"></div><div class="action-text"><strong>CRM Tasks</strong> — follow-ups and deal actions from Zoho.</div></div>
+        <div class="action-item"><div class="action-dot" style="background:#3b82f6"></div><div class="action-text"><strong>Email Approvals</strong> — outbound drafts waiting for your signoff.</div></div>
+        <div class="action-item"><div class="action-dot" style="background:#a855f7"></div><div class="action-text"><strong>Social Content</strong> — captions, creative ideas, and posting plans.</div></div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -754,6 +818,7 @@ function showTab(name){
   event.currentTarget.classList.add('active');
   // init charts lazily
   if(name==='tasks')renderTasks();
+  if(name==='approvals')renderApprovals();
   if(name==='history')initHistoryCharts();
   if(name==='pipeline')initPipelineChart();
 }
@@ -834,6 +899,85 @@ function renderTasks(){
 }
 
 renderTasks();
+
+const APPROVALS = [
+  {
+    kind:'Email Approval',
+    title:'Approve follow-up email to Dan Skrobot',
+    owner:'Daniel',
+    due:'2026-04-04 10:00',
+    status:'Pending Approval',
+    color:'var(--blue)',
+    body:'Subject: Quick follow-up on your quote\n\nHey Dan — just checking in on the quote I sent over. Happy to answer any questions and help you get this wrapped up this week.'
+  },
+  {
+    kind:'Social Content',
+    title:'Review weekend promo caption',
+    owner:'Daniel',
+    due:'2026-04-04 13:00',
+    status:'Pending Approval',
+    color:'var(--purple)',
+    body:'Caption: Summer heat is coming. Reduce glare, protect interiors, and keep your home cooler with professional window film. Message us for a free quote.'
+  },
+  {
+    kind:'CRM Task',
+    title:'Call Peter Mammone re: active quote',
+    owner:'Daniel',
+    due:'2026-04-04 09:00',
+    status:'Approved',
+    color:'var(--green)',
+    body:'Zoho task surfaced by Brian. Peter is live in follow-up and should get a same-day call.'
+  },
+  {
+    kind:'Email Revision',
+    title:'Rewrite recovery email for Gary Xu',
+    owner:'Brian',
+    due:'2026-04-04 11:30',
+    status:'Needs Revision',
+    color:'var(--red)',
+    body:'Current draft is too passive. Daniel wants a more direct “still the right time?” angle with a cleaner CTA.'
+  }
+];
+
+function renderApprovals(){
+  const pending = APPROVALS.filter(a=>a.status==='Pending Approval').length;
+  const approved = APPROVALS.filter(a=>a.status==='Approved').length;
+  const revise = APPROVALS.filter(a=>a.status==='Needs Revision').length;
+  document.getElementById('a-pending').textContent = pending;
+  document.getElementById('a-approved').textContent = approved;
+  document.getElementById('a-revise').textContent = revise;
+  document.getElementById('a-total').textContent = APPROVALS.length;
+  document.getElementById('approval-badge').textContent = pending + revise;
+
+  const list = document.getElementById('approval-list');
+  list.innerHTML = APPROVALS.map((item, idx)=>{
+    const statusBadge = item.status==='Approved'
+      ? '<span class="badge b-blue">Approved</span>'
+      : item.status==='Needs Revision'
+      ? '<span class="badge b-red">Needs Revision</span>'
+      : '<span class="badge b-purple">Pending Approval</span>';
+    return `
+      <div class="card" style="padding:14px;margin-bottom:10px;background:var(--bg)">
+        <div class="card-header" style="margin-bottom:10px">
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);margin-bottom:5px">${item.kind}</div>
+            <div style="font-size:15px;font-weight:700;color:#fff">${item.title}</div>
+            <div style="font-size:11px;color:var(--dim);margin-top:4px">Owner: ${item.owner} · Due: ${item.due}</div>
+          </div>
+          <div>${statusBadge}</div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;white-space:pre-wrap;margin-bottom:10px">${item.body}</div>
+        <textarea id="approval-comment-${idx}" placeholder="Comments for revision / rejection..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-size:12px;min-height:72px;resize:vertical"></textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button style="background:#1d4ed8;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Approve</button>
+          <button style="background:#991b1b;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Reject</button>
+          <button style="background:#6d28d9;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Send Back w/ Comments</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+renderApprovals();
 
 // CHART DEFAULTS
 Chart.defaults.color='#6e7681';
