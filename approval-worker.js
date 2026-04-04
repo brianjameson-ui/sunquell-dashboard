@@ -28,7 +28,17 @@ function markSent(id, note = '') {
   if (!item) throw new Error(`Approval item not found: ${id}`);
   item.status = 'Sent';
   item.sentAt = new Date().toISOString();
+  item.lastError = '';
   if (note) item.comment = note;
+  saveApprovals(data);
+  return item;
+}
+
+function markFailed(id, errorText = '') {
+  const data = loadApprovals();
+  const item = data.items.find(x => x.id === id);
+  if (!item) throw new Error(`Approval item not found: ${id}`);
+  item.lastError = errorText;
   saveApprovals(data);
   return item;
 }
@@ -49,11 +59,14 @@ if (require.main === module) {
     console.log(JSON.stringify(setStatus(id, status, comment), null, 2));
   } else if (cmd === 'mark-sent') {
     console.log(JSON.stringify(markSent(id, comment), null, 2));
+  } else if (cmd === 'mark-failed') {
+    console.log(JSON.stringify(markFailed(id, comment), null, 2));
   } else if (cmd === 'get-approved-to-send') {
     console.log(JSON.stringify(getApprovedToSend(), null, 2));
   } else {
     console.error('Usage: node approval-worker.js set-status <id> <status> [comment]');
     console.error('   or: node approval-worker.js mark-sent <id> [comment]');
+    console.error('   or: node approval-worker.js mark-failed <id> [error]');
     console.error('   or: node approval-worker.js get-approved-to-send');
     process.exit(1);
   }
