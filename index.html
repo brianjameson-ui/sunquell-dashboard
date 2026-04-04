@@ -112,6 +112,24 @@ tr:hover td{background:#0d1117}
 /* INSIGHT */
 .insight{background:var(--border);border-radius:6px;padding:12px 14px;margin-top:12px;font-size:11px;color:var(--dim);line-height:1.6;border-left:3px solid var(--ic,#3b82f6)}
 
+/* INPUTS / APPROVAL ACTIONS */
+.text-input,.text-area{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-size:12px}
+.text-area{min-height:72px;resize:vertical}
+.action-btn{border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer}
+.action-btn.approve{background:#1d4ed8;color:#fff}
+.action-btn.reject{background:#991b1b;color:#fff}
+.action-btn.revise{background:#6d28d9;color:#fff}
+.action-btn.send{background:#15803d;color:#fff}
+.action-btn.done{background:var(--border2);color:#fff}
+.approval-card{padding:14px;margin-bottom:10px;background:var(--bg)}
+.approval-card .card-header{margin-bottom:10px}
+.approval-kind{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);margin-bottom:5px}
+.approval-name{font-size:15px;font-weight:700;color:#fff}
+.approval-meta{font-size:11px;color:var(--dim);margin-top:4px}
+.approval-body{font-size:12px;color:var(--muted);line-height:1.6;white-space:pre-wrap;margin-bottom:10px}
+.comment-note{font-size:11px;color:#f5d0fe;line-height:1.5;margin-bottom:10px}
+.button-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
 /* ACTION ITEMS */
 .action-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
 .action-item:last-child{border-bottom:none}
@@ -955,26 +973,64 @@ function renderApprovals(){
       ? '<span class="badge b-blue">Approved</span>'
       : item.status==='Needs Revision'
       ? '<span class="badge b-red">Needs Revision</span>'
+      : item.status==='Rejected'
+      ? '<span class="badge b-red">Rejected</span>'
+      : item.status==='Sent'
+      ? '<span class="badge b-green">Sent</span>'
       : '<span class="badge b-purple">Pending Approval</span>';
+    const sendButton = (item.kind==='Email Approval' || item.kind==='Twilio Text') && item.status==='Approved'
+      ? `<button class="action-btn send" onclick="sendApprovedItem(${idx})">Send Now</button>`
+      : '';
     return `
-      <div class="card" style="padding:14px;margin-bottom:10px;background:var(--bg)">
-        <div class="card-header" style="margin-bottom:10px">
+      <div class="card approval-card">
+        <div class="card-header">
           <div>
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);margin-bottom:5px">${item.kind}</div>
-            <div style="font-size:15px;font-weight:700;color:#fff">${item.title}</div>
-            <div style="font-size:11px;color:var(--dim);margin-top:4px">Owner: ${item.owner} · Due: ${item.due}</div>
+            <div class="approval-kind">${item.kind}</div>
+            <div class="approval-name">${item.title}</div>
+            <div class="approval-meta">Owner: ${item.owner} · Due: ${item.due}</div>
           </div>
           <div>${statusBadge}</div>
         </div>
-        <div style="font-size:12px;color:var(--muted);line-height:1.6;white-space:pre-wrap;margin-bottom:10px">${item.body}</div>
-        <textarea id="approval-comment-${idx}" placeholder="Comments for revision / rejection..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:10px;font-size:12px;min-height:72px;resize:vertical"></textarea>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-          <button style="background:#1d4ed8;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Approve</button>
-          <button style="background:#991b1b;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Reject</button>
-          <button style="background:#6d28d9;color:#fff;border:none;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer">Send Back w/ Comments</button>
+        <div class="approval-body">${item.body}</div>
+        ${item.comment ? `<div class="comment-note"><strong>Comments:</strong> ${item.comment}</div>` : ''}
+        <textarea id="approval-comment-${idx}" class="text-area" placeholder="Comments for revision / rejection..."></textarea>
+        <div class="button-row">
+          <button class="action-btn approve" onclick="updateApproval(${idx}, 'Approved')">Approve</button>
+          <button class="action-btn reject" onclick="updateApproval(${idx}, 'Rejected')">Reject</button>
+          <button class="action-btn revise" onclick="sendBackApproval(${idx})">Send Back w/ Comments</button>
+          ${sendButton}
         </div>
       </div>`;
   }).join('');
+}
+
+function updateApproval(idx, status){
+  const box = document.getElementById(`approval-comment-${idx}`);
+  if(box && box.value.trim()) APPROVALS[idx].comment = box.value.trim();
+  APPROVALS[idx].status = status;
+  renderApprovals();
+}
+
+function sendBackApproval(idx){
+  const box = document.getElementById(`approval-comment-${idx}`);
+  if(!box || !box.value.trim()){
+    alert('Add comments first so Brian knows what to change.');
+    return;
+  }
+  APPROVALS[idx].comment = box.value.trim();
+  APPROVALS[idx].status = 'Needs Revision';
+  renderApprovals();
+}
+
+function sendApprovedItem(idx){
+  const item = APPROVALS[idx];
+  if(item.status!=='Approved'){
+    alert('Approve it first.');
+    return;
+  }
+  item.status = 'Sent';
+  item.comment = `Queued for automation send at ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  renderApprovals();
 }
 
 renderApprovals();
