@@ -16,6 +16,7 @@
       --amber: #f59e0b;
       --red: #ef4444;
       --blue: #3b82f6;
+      --purple: #8b5cf6;
     }
     * { box-sizing: border-box; }
     body {
@@ -24,175 +25,79 @@
       background: linear-gradient(180deg, #08101f 0%, #0f1730 100%);
       color: var(--text);
     }
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 28px;
-    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 28px; }
     .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 22px;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 20px;
     }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 34px;
-    }
-    .sub {
-      color: var(--muted);
-      font-size: 14px;
-      max-width: 700px;
-      line-height: 1.5;
-    }
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    h1 { margin: 0 0 8px; font-size: 34px; }
+    .sub { color: var(--muted); font-size: 14px; max-width: 760px; line-height: 1.5; }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      cursor: pointer;
+      border: 0; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer;
     }
     .btn-primary { background: var(--blue); color: white; }
     .btn-secondary { background: #24325f; color: white; }
+    .btn-danger { background: #7f1d1d; color: #fff; }
+    .tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tab {
+      border: 1px solid var(--line); background: #101937; color: #dbe4ff; padding: 10px 14px; border-radius: 999px; cursor: pointer; font-weight: 700;
+    }
+    .tab.active { background: var(--blue); border-color: var(--blue); color: white; }
     .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px;
     }
     .card {
-      background: rgba(18, 25, 51, 0.95);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      background: rgba(18, 25, 51, 0.95); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
-    .stat-label {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 10px;
-    }
-    .stat-value {
-      font-size: 30px;
-      font-weight: 800;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 1.3fr .9fr;
-      gap: 18px;
-    }
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .section-title h2 {
-      margin: 0;
-      font-size: 18px;
-    }
+    .stat-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+    .stat-value { font-size: 30px; font-weight: 800; }
+    .layout { display: grid; grid-template-columns: 1.35fr .85fr; gap: 18px; }
+    .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .section-title h2 { margin: 0; font-size: 18px; }
     .pill {
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #24325f;
-      color: #c7d2fe;
+      font-size: 11px; padding: 6px 10px; border-radius: 999px; background: #24325f; color: #c7d2fe;
     }
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .task-list { display: flex; flex-direction: column; gap: 12px; }
     .task {
-      border: 1px solid var(--line);
-      background: var(--panel-2);
-      border-radius: 14px;
-      padding: 14px;
+      border: 1px solid var(--line); background: var(--panel-2); border-radius: 14px; padding: 14px;
     }
     .task-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: start;
-      margin-bottom: 8px;
+      display: flex; justify-content: space-between; gap: 14px; align-items: start; margin-bottom: 8px;
     }
-    .task-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 4px;
-    }
-    .task-meta {
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .task-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+    .task-meta { color: var(--muted); font-size: 12px; }
     .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
+      display: inline-block; padding: 5px 9px; border-radius: 999px; font-size: 11px; font-weight: 700;
     }
     .pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
     .approved { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
     .done { background: rgba(34, 197, 94, 0.15); color: #86efac; }
-    .task-desc {
-      color: #dbe4ff;
-      font-size: 14px;
-      margin: 10px 0 14px;
-      line-height: 1.45;
-    }
-    .task-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .needs-update { background: rgba(139, 92, 246, 0.18); color: #c4b5fd; }
+    .rejected { background: rgba(239, 68, 68, 0.15); color: #fca5a5; }
+    .crm { background: rgba(34, 197, 94, 0.12); color: #86efac; }
+    .email { background: rgba(59, 130, 246, 0.12); color: #93c5fd; }
+    .social { background: rgba(139, 92, 246, 0.12); color: #c4b5fd; }
+    .task-desc { color: #dbe4ff; font-size: 14px; margin: 10px 0 10px; line-height: 1.45; white-space: pre-wrap; }
+    .comment-box { margin-top: 10px; }
+    .comment-box textarea { min-height: 76px; }
+    .task-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .task-actions button {
-      border: 0;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-weight: 700;
-      cursor: pointer;
+      border: 0; border-radius: 10px; padding: 9px 12px; font-weight: 700; cursor: pointer;
     }
     .approve-btn { background: var(--blue); color: white; }
     .done-btn { background: var(--green); color: white; }
+    .update-btn { background: var(--purple); color: white; }
+    .reject-btn { background: var(--red); color: white; }
     .delete-btn { background: #334155; color: white; }
-    .input-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     input, textarea, select {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #0d1530;
-      color: white;
-      font: inherit;
+      width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: #0d1530; color: white; font: inherit;
     }
     textarea { min-height: 90px; resize: vertical; }
-    .small {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 12px;
-      line-height: 1.4;
-    }
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 18px;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
-    }
+    .small { color: var(--muted); font-size: 12px; margin-top: 12px; line-height: 1.4; }
+    .empty { color: var(--muted); text-align: center; padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+    .pages { display: none; }
+    .pages.active { display: block; }
     @media (max-width: 900px) {
       .stats, .layout, .input-row { grid-template-columns: 1fr; }
       .hero { flex-direction: column; }
@@ -204,89 +109,116 @@
     <div class="hero">
       <div>
         <h1>Mission Control</h1>
-        <div class="sub">Your daily action board. I can stack approvals, follow-ups, content tasks, and execution items here. You review, approve, resolve, and keep moving.</div>
+        <div class="sub">One place for approvals, CRM tasks, draft emails, social content, and execution items. Review it, approve it, reject it, or send it back with comments.</div>
       </div>
       <div class="top-actions">
-        <button class="btn btn-primary" onclick="seedDemoTasks()">Load Demo Tasks</button>
-        <button class="btn btn-secondary" onclick="clearCompleted()">Clear Completed</button>
+        <button class="btn btn-primary" onclick="seedApprovalFeed()">Load Demo Feed</button>
+        <button class="btn btn-secondary" onclick="clearCompleted()">Clear Done</button>
       </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('approvals', this)">Approvals & Action Feed</button>
+      <button class="tab" onclick="showTab('builder', this)">Add Item</button>
     </div>
 
     <div class="stats">
       <div class="card"><div class="stat-label">Total Items</div><div class="stat-value" id="stat-total">0</div></div>
-      <div class="card"><div class="stat-label">Pending Approval</div><div class="stat-value" id="stat-pending">0</div></div>
+      <div class="card"><div class="stat-label">Needs Decision</div><div class="stat-value" id="stat-pending">0</div></div>
       <div class="card"><div class="stat-label">Approved</div><div class="stat-value" id="stat-approved">0</div></div>
-      <div class="card"><div class="stat-label">Done</div><div class="stat-value" id="stat-done">0</div></div>
+      <div class="card"><div class="stat-label">Needs Update</div><div class="stat-value" id="stat-update">0</div></div>
     </div>
 
-    <div class="layout">
-      <div class="card">
-        <div class="section-title">
-          <h2>Action Queue</h2>
-          <span class="pill">Saved in this browser</span>
+    <div id="page-approvals" class="pages active">
+      <div class="layout">
+        <div class="card">
+          <div class="section-title">
+            <h2>Approval Queue</h2>
+            <span class="pill">Stored in this browser</span>
+          </div>
+          <div id="task-list" class="task-list"></div>
         </div>
-        <div id="task-list" class="task-list"></div>
+        <div class="card">
+          <div class="section-title">
+            <h2>How to Use</h2>
+            <span class="pill">Simple workflow</span>
+          </div>
+          <div class="small" style="font-size:13px;color:#dbe4ff">
+            <strong>Approve</strong> = good to go.<br/><br/>
+            <strong>Reject</strong> = do not do this.<br/><br/>
+            <strong>Send Back w/ Comments</strong> = needs edits first. Add notes and I can revise the item.
+          </div>
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+            <div class="small">This tab is built for:</div>
+            <div class="small">• CRM tasks that need your attention</div>
+            <div class="small">• Client emails waiting for approval</div>
+            <div class="small">• Social posts/captions waiting for signoff</div>
+            <div class="small">• Anything else I want you to decide on fast</div>
+          </div>
+        </div>
       </div>
+    </div>
 
+    <div id="page-builder" class="pages">
       <div class="card">
         <div class="section-title">
           <h2>Add New Item</h2>
           <span class="pill">Manual for now</span>
         </div>
         <div class="input-row">
-          <input id="new-title" placeholder="Task title" />
+          <input id="new-title" placeholder="Title" />
           <select id="new-type">
-            <option value="Approval Needed">Approval Needed</option>
-            <option value="Follow-up">Follow-up</option>
-            <option value="Content">Content</option>
-            <option value="Reminder">Reminder</option>
+            <option value="CRM Task">CRM Task</option>
+            <option value="Email Approval">Email Approval</option>
+            <option value="Social Approval">Social Approval</option>
+            <option value="General">General</option>
           </select>
         </div>
         <div class="input-row">
           <input id="new-owner" placeholder="Owner (Daniel / Brian)" />
           <input id="new-due" type="datetime-local" />
         </div>
-        <textarea id="new-desc" placeholder="What needs to happen?"></textarea>
+        <textarea id="new-desc" placeholder="Details, draft email, caption, or task notes"></textarea>
         <div style="margin-top:12px">
           <button class="btn btn-primary" onclick="addTask()">Add to Queue</button>
-        </div>
-        <div class="small">
-          Right now this is a real dashboard UI on GitHub Pages, but persistence is browser-local. That means it behaves like an app, not raw code. Next step after this is wiring it to a backend or GitHub JSON file so I can write into it automatically.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'mission_control_tasks_v1';
+    const STORAGE_KEY = 'mission_control_approval_feed_v2';
 
     const defaultTasks = [
       {
         id: crypto.randomUUID(),
-        title: 'Approve follow-up email to Peter Mammone',
-        type: 'Approval Needed',
+        title: 'Follow up with Peter Mammone',
+        type: 'CRM Task',
         owner: 'Daniel',
         due: '2026-04-04T09:00',
-        description: 'Review the drafted follow-up and approve sending.',
-        status: 'Pending'
+        description: 'Zoho CRM task. Customer needs a callback tomorrow morning.',
+        status: 'Pending',
+        comments: ''
       },
       {
         id: crypto.randomUUID(),
-        title: 'Post weekend promo at 1 PM',
-        type: 'Content',
+        title: 'Approve email to Dan Skrobot',
+        type: 'Email Approval',
+        owner: 'Daniel',
+        due: '2026-04-04T10:00',
+        description: 'Subject: Quick follow-up on your quote\n\nHey Dan — just checking in on the quote I sent over. Happy to answer any questions and help you get this wrapped up this week.',
+        status: 'Pending',
+        comments: ''
+      },
+      {
+        id: crypto.randomUUID(),
+        title: 'Review weekend social post',
+        type: 'Social Approval',
         owner: 'Daniel',
         due: '2026-04-04T13:00',
-        description: 'Use the prepared Facebook/Instagram caption and creative.',
-        status: 'Approved'
-      },
-      {
-        id: crypto.randomUUID(),
-        title: 'Call Shawn And',
-        type: 'Follow-up',
-        owner: 'Daniel',
-        due: '2026-04-04T15:00',
-        description: 'Quick sales follow-up call to move quote forward.',
-        status: 'Pending'
+        description: 'Caption: Summer heat is coming. Reduce glare, protect interiors, and keep your home cooler with professional window film. Message us for a free quote.',
+        status: 'Pending',
+        comments: ''
       }
     ];
 
@@ -303,6 +235,15 @@
     function badgeClass(status) {
       if (status === 'Done') return 'done';
       if (status === 'Approved') return 'approved';
+      if (status === 'Needs Update') return 'needs-update';
+      if (status === 'Rejected') return 'rejected';
+      return 'pending';
+    }
+
+    function typeClass(type) {
+      if (type === 'CRM Task') return 'crm';
+      if (type === 'Email Approval') return 'email';
+      if (type === 'Social Approval') return 'social';
       return 'pending';
     }
 
@@ -319,10 +260,10 @@
       document.getElementById('stat-total').textContent = tasks.length;
       document.getElementById('stat-pending').textContent = tasks.filter(t => t.status === 'Pending').length;
       document.getElementById('stat-approved').textContent = tasks.filter(t => t.status === 'Approved').length;
-      document.getElementById('stat-done').textContent = tasks.filter(t => t.status === 'Done').length;
+      document.getElementById('stat-update').textContent = tasks.filter(t => t.status === 'Needs Update').length;
 
       if (!tasks.length) {
-        list.innerHTML = '<div class="empty">No items yet. Add one on the right or click <strong>Load Demo Tasks</strong>.</div>';
+        list.innerHTML = '<div class="empty">No items yet. Click <strong>Load Demo Feed</strong> or add a new one.</div>';
         return;
       }
 
@@ -331,13 +272,19 @@
           <div class="task-top">
             <div>
               <div class="task-title">${task.title}</div>
-              <div class="task-meta">${task.type} · Owner: ${task.owner || '—'} · Due: ${formatDue(task.due)}</div>
+              <div class="task-meta"><span class="badge ${typeClass(task.type)}">${task.type}</span> &nbsp; Owner: ${task.owner || '—'} · Due: ${formatDue(task.due)}</div>
             </div>
             <span class="badge ${badgeClass(task.status)}">${task.status}</span>
           </div>
           <div class="task-desc">${task.description || 'No details provided.'}</div>
+          ${task.comments ? `<div class="small" style="color:#f5d0fe;margin:8px 0 0"><strong>Comments:</strong> ${task.comments}</div>` : ''}
+          <div class="comment-box">
+            <textarea id="comment-${task.id}" placeholder="Add comments if sending back for updates or rejecting..."></textarea>
+          </div>
           <div class="task-actions">
             <button class="approve-btn" onclick="setStatus('${task.id}','Approved')">Approve</button>
+            <button class="reject-btn" onclick="setStatus('${task.id}','Rejected')">Disapprove</button>
+            <button class="update-btn" onclick="sendBack('${task.id}')">Send Back w/ Comments</button>
             <button class="done-btn" onclick="setStatus('${task.id}','Done')">Mark Done</button>
             <button class="delete-btn" onclick="removeTask('${task.id}')">Delete</button>
           </div>
@@ -365,7 +312,8 @@
         owner,
         due,
         description,
-        status: 'Pending'
+        status: 'Pending',
+        comments: ''
       });
       saveTasks(tasks);
 
@@ -373,12 +321,30 @@
       document.getElementById('new-owner').value = '';
       document.getElementById('new-due').value = '';
       document.getElementById('new-desc').value = '';
-      document.getElementById('new-type').value = 'Approval Needed';
+      document.getElementById('new-type').value = 'CRM Task';
+      showTab('approvals');
       render();
     }
 
     function setStatus(id, status) {
-      const tasks = loadTasks().map(task => task.id === id ? { ...task, status } : task);
+      const tasks = loadTasks().map(task => {
+        if (task.id !== id) return task;
+        const commentEl = document.getElementById(`comment-${id}`);
+        const comment = commentEl ? commentEl.value.trim() : '';
+        return { ...task, status, comments: comment || task.comments || '' };
+      });
+      saveTasks(tasks);
+      render();
+    }
+
+    function sendBack(id) {
+      const commentEl = document.getElementById(`comment-${id}`);
+      const comment = commentEl ? commentEl.value.trim() : '';
+      if (!comment) {
+        alert('Add comments first so I know what to update.');
+        return;
+      }
+      const tasks = loadTasks().map(task => task.id === id ? { ...task, status: 'Needs Update', comments: comment } : task);
       saveTasks(tasks);
       render();
     }
@@ -395,9 +361,20 @@
       render();
     }
 
-    function seedDemoTasks() {
+    function seedApprovalFeed() {
       saveTasks(defaultTasks);
       render();
+    }
+
+    function showTab(name, button) {
+      document.querySelectorAll('.pages').forEach(p => p.classList.remove('active'));
+      document.getElementById(`page-${name}`).classList.add('active');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (button) button.classList.add('active');
+      else {
+        const match = Array.from(document.querySelectorAll('.tab')).find(t => t.textContent.toLowerCase().includes(name));
+        if (match) match.classList.add('active');
+      }
     }
 
     render();
