@@ -974,6 +974,8 @@ function renderApprovals(){
         <div class="approval-body">${item.subject ? 'Subject: ' + item.subject + '\n\n' : ''}${item.body || ''}</div>
         ${item.comment ? `<div class="comment-note"><strong>Comments:</strong> ${item.comment}</div>` : ''}
         <textarea id="approval-comment-${idx}" class="text-area" placeholder="Comments for revision / rejection...">${item.comment || ''}</textarea>
+        ${item.sentAt ? `<div class="insight" style="--ic:#22c55e;margin-top:10px">✅ Last action succeeded · Sent at ${new Date(item.sentAt).toLocaleString()}</div>` : ''}
+        ${item.lastError ? `<div class="insight" style="--ic:#ef4444;margin-top:10px">❌ Last action failed · ${item.lastError}</div>` : ''}
         <div class="button-row">
           <button class="action-btn approve" onclick="updateApproval(${idx}, 'Approved', false)">Approve</button>
           <button class="action-btn reject" onclick="updateApproval(${idx}, 'Rejected', false)">Reject</button>
@@ -999,6 +1001,8 @@ async function updateApproval(idx, status, execute){
     if(!data.ok) throw new Error(data.error || 'Relay request failed');
     await loadApprovals();
   } catch(err) {
+    if (APPROVALS[idx]) APPROVALS[idx].lastError = err.message;
+    renderApprovals();
     alert('Approval relay error: ' + err.message);
   }
 }
