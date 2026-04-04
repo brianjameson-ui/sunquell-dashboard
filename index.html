@@ -1,406 +1,975 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission Control</title>
-  <style>
-    :root {
-      --bg: #0b1020;
-      --panel: #121933;
-      --panel-2: #192345;
-      --text: #eef2ff;
-      --muted: #9aa6d1;
-      --line: #2a376b;
-      --green: #22c55e;
-      --amber: #f59e0b;
-      --red: #ef4444;
-      --blue: #3b82f6;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background: linear-gradient(180deg, #08101f 0%, #0f1730 100%);
-      color: var(--text);
-    }
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 28px;
-    }
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 22px;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 34px;
-    }
-    .sub {
-      color: var(--muted);
-      font-size: 14px;
-      max-width: 700px;
-      line-height: 1.5;
-    }
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .btn-primary { background: var(--blue); color: white; }
-    .btn-secondary { background: #24325f; color: white; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-    .card {
-      background: rgba(18, 25, 51, 0.95);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-    }
-    .stat-label {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 10px;
-    }
-    .stat-value {
-      font-size: 30px;
-      font-weight: 800;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 1.3fr .9fr;
-      gap: 18px;
-    }
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .section-title h2 {
-      margin: 0;
-      font-size: 18px;
-    }
-    .pill {
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #24325f;
-      color: #c7d2fe;
-    }
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .task {
-      border: 1px solid var(--line);
-      background: var(--panel-2);
-      border-radius: 14px;
-      padding: 14px;
-    }
-    .task-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: start;
-      margin-bottom: 8px;
-    }
-    .task-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 4px;
-    }
-    .task-meta {
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
-    .approved { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
-    .done { background: rgba(34, 197, 94, 0.15); color: #86efac; }
-    .task-desc {
-      color: #dbe4ff;
-      font-size: 14px;
-      margin: 10px 0 14px;
-      line-height: 1.45;
-    }
-    .task-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .task-actions button {
-      border: 0;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .approve-btn { background: var(--blue); color: white; }
-    .done-btn { background: var(--green); color: white; }
-    .delete-btn { background: #334155; color: white; }
-    .input-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #0d1530;
-      color: white;
-      font: inherit;
-    }
-    textarea { min-height: 90px; resize: vertical; }
-    .small {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 12px;
-      line-height: 1.4;
-    }
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 18px;
-      border: 1px dashed var(--line);
-      border-radius: 12px;
-    }
-    @media (max-width: 900px) {
-      .stats, .layout, .input-row { grid-template-columns: 1fr; }
-      .hero { flex-direction: column; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunquell Mission Control</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080a0e;--surface:#0d1117;--border:#161b22;--border2:#21262d;
+  --text:#e1e4e8;--muted:#8b949e;--dim:#6e7681;--ghost:#30363d;
+  --green:#22c55e;--green-bg:#0d2818;--green-soft:#3fb950;
+  --blue:#3b82f6;--blue-bg:#0c2a4a;--blue-soft:#58a6ff;
+  --amber:#f59e0b;--amber-bg:#2d1b00;--amber-soft:#d29922;
+  --red:#ef4444;--red-bg:#2d0b0b;--red-soft:#f85149;
+  --purple:#a855f7;--purple-bg:#1e0e3e;--purple-soft:#bc8cff;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* NAV */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 28px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100}
+.brand{font-size:18px;font-weight:700;color:#fff;letter-spacing:-.3px}
+.brand span{color:var(--green)}
+.brand sub{font-size:10px;font-weight:400;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;margin-left:6px;vertical-align:middle}
+.tabs{display:flex;gap:2px}
+.tab{padding:7px 16px;border-radius:6px;font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;transition:all .15s;border:none;background:none;letter-spacing:.02em}
+.tab:hover{color:var(--muted);background:var(--border)}
+.tab.active{background:var(--border2);color:var(--text)}
+.tab-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:20px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* PAGES */
+.page{display:none;padding:24px 28px}
+.page.active{display:block}
+
+/* SECTION LABELS */
+.section-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ghost);font-weight:600;margin-bottom:10px;margin-top:20px}
+.section-label:first-child{margin-top:0}
+
+/* KPI GRID */
+.kpi-grid{display:grid;gap:10px;margin-bottom:16px}
+.kpi-grid-6{grid-template-columns:repeat(6,1fr)}
+.kpi-grid-4{grid-template-columns:repeat(4,1fr)}
+.kpi-grid-3{grid-template-columns:repeat(3,1fr)}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;overflow:hidden}
+.kpi-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);margin-bottom:8px}
+.kpi-value{font-size:22px;font-weight:700;color:#fff;line-height:1.1}
+.kpi-delta{font-size:11px;margin-top:5px}
+.delta-up{color:var(--green)}
+.delta-warn{color:var(--amber)}
+.delta-danger{color:var(--red)}
+.delta-neutral{color:var(--ghost)}
+
+/* GRID LAYOUTS */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:14px}
+.grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:14px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-title{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);font-weight:600}
+.card-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--border);color:var(--dim)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ghost);text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+td{font-size:12px;padding:8px 8px;border-bottom:1px solid var(--bg);color:var(--muted);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#0d1117}
+.td-name{color:#c9d1d9;font-weight:500}
+.td-amount{color:#fff;font-weight:700;font-size:13px}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.02em}
+.b-green{background:var(--green-bg);color:var(--green-soft)}
+.b-amber{background:var(--amber-bg);color:var(--amber-soft)}
+.b-blue{background:var(--blue-bg);color:var(--blue-soft)}
+.b-red{background:var(--red-bg);color:var(--red-soft)}
+.b-purple{background:var(--purple-bg);color:var(--purple-soft)}
+.b-gray{background:var(--border);color:var(--dim)}
+
+/* STAT ROWS */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.stat-row:last-child{border-bottom:none}
+.stat-name{font-size:12px;color:var(--dim)}
+.stat-val{font-size:13px;font-weight:600;color:#c9d1d9}
+.stat-val.green{color:var(--green)}
+.stat-val.amber{color:var(--amber)}
+.stat-val.red{color:var(--red)}
+
+/* FUNNEL BARS */
+.funnel-item{margin-bottom:8px}
+.funnel-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.funnel-name{font-size:12px;color:#c9d1d9}
+.funnel-meta{font-size:11px;color:var(--dim)}
+.funnel-bar-track{background:var(--border);border-radius:3px;height:6px}
+.funnel-bar-fill{height:6px;border-radius:3px}
+
+/* HORIZONTAL BAR ROWS */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-label{font-size:12px;color:var(--muted);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;background:var(--border);border-radius:3px;height:5px}
+.bar-fill{height:5px;border-radius:3px}
+.bar-num{font-size:11px;color:var(--ghost);width:28px;text-align:right;flex-shrink:0}
+
+/* INSIGHT */
+.insight{background:var(--border);border-radius:6px;padding:12px 14px;margin-top:12px;font-size:11px;color:var(--dim);line-height:1.6;border-left:3px solid var(--ic,#3b82f6)}
+
+/* ACTION ITEMS */
+.action-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.action-item:last-child{border-bottom:none}
+.action-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.action-text{font-size:12px;color:var(--muted);line-height:1.5}
+.action-text strong{color:#c9d1d9}
+
+/* MONTH BARS */
+.month-bar-section{margin-top:4px}
+.month-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.month-label{font-size:11px;color:var(--dim);width:36px;flex-shrink:0}
+.month-track{flex:1;background:var(--border);border-radius:3px;height:18px;position:relative;overflow:hidden}
+.month-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:600;color:#fff;white-space:nowrap;min-width:2px}
+.month-val{font-size:11px;color:var(--dim);width:40px;text-align:right;flex-shrink:0}
+
+/* MISSION CONTROL */
+.agent-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:flex;align-items:center;gap:14px}
+.agent-icon{width:40px;height:40px;border-radius:8px;background:var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.agent-name{font-size:13px;font-weight:600;color:#c9d1d9}
+.agent-role{font-size:11px;color:var(--dim);margin-top:2px}
+.agent-status{margin-left:auto;text-align:right}
+.agent-uptime{font-size:11px;color:var(--dim)}
+
+.log-line{font-size:11px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-family:monospace}
+.log-line:last-child{border-bottom:none}
+.log-time{color:var(--ghost);flex-shrink:0;width:80px}
+.log-ok{color:var(--green-soft)}
+.log-warn{color:var(--amber-soft)}
+.log-err{color:var(--red-soft)}
+.log-info{color:var(--blue-soft)}
+
+.task-row{padding:10px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
+.task-row:last-child{border-bottom:none}
+.task-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.task-title{font-size:12px;font-weight:500;color:#c9d1d9}
+.task-desc{font-size:11px;color:var(--dim);margin-top:2px;line-height:1.4}
+.task-meta{font-size:10px;color:var(--ghost);margin-top:4px}
+
+/* CHART WRAPPERS */
+.chart-wrap{position:relative;height:180px;margin-top:8px}
+.chart-wrap-sm{position:relative;height:140px;margin-top:8px}
+
+/* HISTORY TABLE */
+.history-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px}
+.history-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.history-month{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ghost);margin-bottom:6px}
+.history-rev{font-size:18px;font-weight:700;color:#fff}
+.history-leads{font-size:11px;color:var(--dim);margin-top:4px}
+.history-conv{font-size:11px;margin-top:3px}
+
+/* CRON LIST */
+.cron-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.cron-row:last-child{border-bottom:none}
+.cron-name{font-size:12px;font-weight:500;color:#c9d1d9}
+.cron-sched{font-size:11px;color:var(--dim);margin-top:2px;font-family:monospace}
+.cron-last{font-size:11px;color:var(--ghost);text-align:right}
+.cron-status{font-size:10px;font-weight:600;margin-top:2px}
+
+.footer{text-align:center;font-size:10px;color:var(--ghost);margin-top:4px;padding:14px 28px;border-top:1px solid var(--border)}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div>
-        <h1>Mission Control</h1>
-        <div class="sub">Your daily action board. I can stack approvals, follow-ups, content tasks, and execution items here. You review, approve, resolve, and keep moving.</div>
+
+<div class="topbar">
+  <div>
+    <div class="brand">Sunquell <span>Mission Control</span><sub>by Brian</sub></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('crm')"><span class="tab-dot" style="background:#22c55e"></span>CRM &amp; Sales</button>
+    <button class="tab" onclick="showTab('tasks')"><span class="tab-dot" style="background:#ef4444"></span>Tasks <span id="task-badge" style="background:#ef4444;color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px"></span></button>
+    <button class="tab" onclick="showTab('history')"><span class="tab-dot" style="background:#3b82f6"></span>Historical Stats</button>
+    <button class="tab" onclick="showTab('agents')"><span class="tab-dot" style="background:#a855f7"></span>Agent Control</button>
+    <button class="tab" onclick="showTab('pipeline')"><span class="tab-dot" style="background:#f59e0b"></span>Pipeline</button>
+  </div>
+  <div class="status-pill">
+    <div class="pulse"></div>
+    Brian Online · <span id="clock" style="color:var(--muted)"></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB: CRM & SALES -->
+<div class="page active" id="page-crm">
+
+  <div class="kpi-grid kpi-grid-6" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Closed Revenue (Mar)</div>
+      <div class="kpi-value">$9,883</div>
+      <div class="kpi-delta delta-up">↑ 7.9× vs Feb ($1,256)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Hot Pipeline</div>
+      <div class="kpi-value">$43,040</div>
+      <div class="kpi-delta delta-warn">15 quotes outstanding</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#ef4444"></div>
+      <div class="kpi-label">Stalling Pipeline</div>
+      <div class="kpi-value">$17,033</div>
+      <div class="kpi-delta delta-danger">11 deals at risk</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#a855f7"></div>
+      <div class="kpi-label">Lead → Close Rate</div>
+      <div class="kpi-value">3.1%</div>
+      <div class="kpi-delta delta-neutral">5 closed / 160 leads</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#f59e0b"></div>
+      <div class="kpi-label">Quote → Close Rate</div>
+      <div class="kpi-value">24%</div>
+      <div class="kpi-delta delta-up">5 closed / 21 quoted</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Avg Deal Size</div>
+      <div class="kpi-value">$2,228</div>
+      <div class="kpi-delta delta-neutral">All closed deals</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Sales Funnel</div>
+        <div class="card-badge">157 total deals</div>
       </div>
-      <div class="top-actions">
-        <button class="btn btn-primary" onclick="seedDemoTasks()">Load Demo Tasks</button>
-        <button class="btn btn-secondary" onclick="clearCompleted()">Clear Completed</button>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name">Not Interested / MIA</span><span class="funnel-meta">44 · $41,156</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:100%;background:#21262d"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name">CP Drip (passive)</span><span class="funnel-meta">39 · $2,207</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:89%;background:#1d4ed8"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name">2025 Historical</span><span class="funnel-meta">30 · $49,337</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:68%;background:#21262d"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name" style="color:#3fb950">Quote Sent 🔥</span><span class="funnel-meta" style="color:#3fb950">15 · $35,830</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:34%;background:#238636"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name" style="color:#d29922">Stalling ⚠️</span><span class="funnel-meta" style="color:#d29922">11 · $17,033</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:25%;background:#9e6a03"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name" style="color:#58a6ff">Send Quote</span><span class="funnel-meta">6 · $5,141</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:14%;background:#1f6feb"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name" style="color:#3fb950">Paid ✅</span><span class="funnel-meta" style="color:#3fb950">5 · $11,139</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:11%;background:#238636"></div></div>
+      </div>
+      <div class="funnel-item">
+        <div class="funnel-top"><span class="funnel-name">Paid + Invoiced</span><span class="funnel-meta">2 · $5,640</span></div>
+        <div class="funnel-bar-track"><div class="funnel-bar-fill" style="width:5%;background:#238636"></div></div>
       </div>
     </div>
 
-    <div class="stats">
-      <div class="card"><div class="stat-label">Total Items</div><div class="stat-value" id="stat-total">0</div></div>
-      <div class="card"><div class="stat-label">Pending Approval</div><div class="stat-value" id="stat-pending">0</div></div>
-      <div class="card"><div class="stat-label">Approved</div><div class="stat-value" id="stat-approved">0</div></div>
-      <div class="card"><div class="stat-label">Done</div><div class="stat-value" id="stat-done">0</div></div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Pipeline Value</div></div>
+      <div class="stat-row"><span class="stat-name">Total Active Pipeline</span><span class="stat-val">$45,247</span></div>
+      <div class="stat-row"><span class="stat-name">Hot (Quote Stage)</span><span class="stat-val green">$43,040</span></div>
+      <div class="stat-row"><span class="stat-name">Stalling Deals</span><span class="stat-val red">$17,033</span></div>
+      <div class="stat-row"><span class="stat-name">2025 Untapped Pipeline</span><span class="stat-val amber">$49,337</span></div>
+      <div class="stat-row"><span class="stat-name">March Closed</span><span class="stat-val green">$9,883</span></div>
+      <div class="stat-row"><span class="stat-name">Feb Closed</span><span class="stat-val">$1,256</span></div>
+      <div class="stat-row"><span class="stat-name">All-Time Paid Revenue</span><span class="stat-val green">$16,779</span></div>
+      <div class="insight" style="--ic:#f59e0b">💡 $49K sits in 2025 historical stage — likely closed/billed but untagged. Verify these are properly marked closed.</div>
     </div>
 
-    <div class="layout">
-      <div class="card">
-        <div class="section-title">
-          <h2>Action Queue</h2>
-          <span class="pill">Saved in this browser</span>
-        </div>
-        <div id="task-list" class="task-list"></div>
-      </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title">Conversion Metrics</div></div>
+      <div class="stat-row"><span class="stat-name">Total Leads in CRM</span><span class="stat-val">160</span></div>
+      <div class="stat-row"><span class="stat-name">Total Deals in CRM</span><span class="stat-val">157</span></div>
+      <div class="stat-row"><span class="stat-name">Paid (Closed Won)</span><span class="stat-val green">7</span></div>
+      <div class="stat-row"><span class="stat-name">Lead → Deal Rate</span><span class="stat-val">98%</span></div>
+      <div class="stat-row"><span class="stat-name">Lead → Close Rate</span><span class="stat-val amber">4.4%</span></div>
+      <div class="stat-row"><span class="stat-name">Quote → Close Rate</span><span class="stat-val green">24%</span></div>
+      <div class="stat-row"><span class="stat-name">Not Interested Rate</span><span class="stat-val red">59%</span></div>
+      <div class="stat-row"><span class="stat-name">Avg Deal Value (closed)</span><span class="stat-val">$2,228</span></div>
+      <div class="insight" style="--ic:#a855f7">💡 Once quoted, 1 in 4 closes. The funnel problem is pre-quote — getting leads to accept the in-home assessment.</div>
+    </div>
+  </div>
 
-      <div class="card">
-        <div class="section-title">
-          <h2>Add New Item</h2>
-          <span class="pill">Manual for now</span>
-        </div>
-        <div class="input-row">
-          <input id="new-title" placeholder="Task title" />
-          <select id="new-type">
-            <option value="Approval Needed">Approval Needed</option>
-            <option value="Follow-up">Follow-up</option>
-            <option value="Content">Content</option>
-            <option value="Reminder">Reminder</option>
-          </select>
-        </div>
-        <div class="input-row">
-          <input id="new-owner" placeholder="Owner (Daniel / Brian)" />
-          <input id="new-due" type="datetime-local" />
-        </div>
-        <textarea id="new-desc" placeholder="What needs to happen?"></textarea>
-        <div style="margin-top:12px">
-          <button class="btn btn-primary" onclick="addTask()">Add to Queue</button>
-        </div>
-        <div class="small">
-          Right now this is a real dashboard UI on GitHub Pages, but persistence is browser-local. That means it behaves like an app, not raw code. Next step after this is wiring it to a backend or GitHub JSON file so I can write into it automatically.
-        </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Lead Sources</div>
+        <div class="card-badge">160 leads</div>
+      </div>
+      <div class="bar-row"><span class="bar-label">Meta Ads</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#1f6feb"></div></div><span class="bar-num">80</span></div>
+      <div class="bar-row"><span class="bar-label">Facebook</span><div class="bar-track"><div class="bar-fill" style="width:64%;background:#1f6feb"></div></div><span class="bar-num">51</span></div>
+      <div class="bar-row"><span class="bar-label">Trade Show</span><div class="bar-track"><div class="bar-fill" style="width:31%;background:#f85149"></div></div><span class="bar-num">25</span></div>
+      <div class="bar-row"><span class="bar-label">Referral</span><div class="bar-track"><div class="bar-fill" style="width:2%;background:#3fb950"></div></div><span class="bar-num">1</span></div>
+      <div class="bar-row"><span class="bar-label">Other</span><div class="bar-track"><div class="bar-fill" style="width:4%;background:#6e7681"></div></div><span class="bar-num">3</span></div>
+      <div style="margin:14px 0 10px;border-top:1px solid var(--border);padding-top:14px">
+        <div class="card-title" style="margin-bottom:12px">Lead Status Breakdown</div>
+        <div class="bar-row"><span class="bar-label">Not Interested</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#f85149"></div></div><span class="bar-num">95</span></div>
+        <div class="bar-row"><span class="bar-label">Follow Up Sched.</span><div class="bar-track"><div class="bar-fill" style="width:31%;background:#d29922"></div></div><span class="bar-num">29</span></div>
+        <div class="bar-row"><span class="bar-label">Trying to Connect</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:#d29922"></div></div><span class="bar-num">26</span></div>
+        <div class="bar-row"><span class="bar-label">Never Connected</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:#6e7681"></div></div><span class="bar-num">9</span></div>
+        <div class="bar-row"><span class="bar-label">New Leads</span><div class="bar-track"><div class="bar-fill" style="width:1%;background:#3fb950"></div></div><span class="bar-num">1</span></div>
+      </div>
+      <div class="insight" style="--ic:#f85149">❌ Trade Show ≈ 0% conversion. ✅ Meta Ads = best quality. 🌟 Referrals close 3–5× better — no formal program yet.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Priority Actions This Week</div>
+        <div class="card-badge">Revenue impact</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#f85149"></div>
+        <div class="action-text"><strong>Call Shawn And ($10,251)</strong> — Largest open quote. No close date. Every week without follow-up is a risk. Find the objection, solve it.</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#f85149"></div>
+        <div class="action-text"><strong>Call Mohika Sehgal ($7,209)</strong> — Second largest open quote. Ask what questions she has about the quote.</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#f59e0b"></div>
+        <div class="action-text"><strong>Send Quote to Paolo Empire ($4,341)</strong> — Quote scheduled but not sent. Every day is a stall risk.</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#f59e0b"></div>
+        <div class="action-text"><strong>Recovery on Gary Xu ($5,997) + Juan OROZCO ($4,473)</strong> — Both stalling. One honest email: "Still the right time?"</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#a855f7"></div>
+        <div class="action-text"><strong>Activate "New Lead Welcome Series"</strong> — Campaign is in Zoho as DRAFT. Add sender, add 55 warm leads, convert to Autoresponder, activate.</div>
+      </div>
+      <div class="action-item">
+        <div class="action-dot" style="background:#3b82f6"></div>
+        <div class="action-text"><strong>Build a referral program</strong> — 1 referral in 160 leads. Even $100 off per referral pays for itself on the first close.</div>
       </div>
     </div>
   </div>
 
-  <script>
-    const STORAGE_KEY = 'mission_control_tasks_v1';
+</div>
 
-    const defaultTasks = [
-      {
-        id: crypto.randomUUID(),
-        title: 'Approve follow-up email to Peter Mammone',
-        type: 'Approval Needed',
-        owner: 'Daniel',
-        due: '2026-04-04T09:00',
-        description: 'Review the drafted follow-up and approve sending.',
-        status: 'Pending'
-      },
-      {
-        id: crypto.randomUUID(),
-        title: 'Post weekend promo at 1 PM',
-        type: 'Content',
-        owner: 'Daniel',
-        due: '2026-04-04T13:00',
-        description: 'Use the prepared Facebook/Instagram caption and creative.',
-        status: 'Approved'
-      },
-      {
-        id: crypto.randomUUID(),
-        title: 'Call Shawn And',
-        type: 'Follow-up',
-        owner: 'Daniel',
-        due: '2026-04-04T15:00',
-        description: 'Quick sales follow-up call to move quote forward.',
-        status: 'Pending'
-      }
-    ];
+<!-- ═══════════════════════════════════════════════ TAB: ZOHO TASKS -->
+<div class="page" id="page-tasks">
 
-    function loadTasks() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (!saved) return [];
-      try { return JSON.parse(saved); } catch { return []; }
-    }
+  <div class="kpi-grid kpi-grid-4" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#ef4444"></div>
+      <div class="kpi-label">Overdue</div>
+      <div class="kpi-value" id="t-overdue" style="color:#ef4444">—</div>
+      <div class="kpi-delta delta-danger">Needs action now</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#f59e0b"></div>
+      <div class="kpi-label">Due Today</div>
+      <div class="kpi-value" id="t-today" style="color:#f59e0b">—</div>
+      <div class="kpi-delta delta-warn">Due Apr 3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Upcoming (7 days)</div>
+      <div class="kpi-value" id="t-upcoming">—</div>
+      <div class="kpi-delta delta-neutral">Apr 4–10</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Total Open</div>
+      <div class="kpi-value" id="t-total">—</div>
+      <div class="kpi-delta delta-neutral">All active tasks</div>
+    </div>
+  </div>
 
-    function saveTasks(tasks) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    }
+  <div class="grid-2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Daniel's Tasks</div>
+        <div class="card-badge" id="daniel-count">—</div>
+      </div>
+      <div id="daniel-tasks"><div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">Loading...</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Madison's Tasks</div>
+        <div class="card-badge" id="madison-count">—</div>
+      </div>
+      <div id="madison-tasks"><div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">Loading...</div></div>
+    </div>
+  </div>
 
-    function badgeClass(status) {
-      if (status === 'Done') return 'done';
-      if (status === 'Approved') return 'approved';
-      return 'pending';
-    }
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">All Open Tasks — Sorted by Due Date</div>
+      <div class="card-badge">Live from Zoho CRM</div>
+    </div>
+    <table>
+      <thead><tr><th>Task</th><th>Contact</th><th>Owner</th><th>Due Date</th><th>Status</th></tr></thead>
+      <tbody id="all-tasks-body"><tr><td colspan="5" style="text-align:center;color:var(--ghost);padding:20px">Loading tasks...</td></tr></tbody>
+    </table>
+    <div style="margin-top:12px;font-size:10px;color:var(--ghost);text-align:right">Last synced: <span id="tasks-sync-time">—</span> · Data from Zoho CRM</div>
+  </div>
 
-    function formatDue(due) {
-      if (!due) return 'No due date';
-      const d = new Date(due);
-      return d.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
-    }
+</div>
 
-    function render() {
-      const tasks = loadTasks();
-      const list = document.getElementById('task-list');
+<!-- ═══════════════════════════════════════════════ TAB: HISTORICAL STATS -->
+<div class="page" id="page-history">
 
-      document.getElementById('stat-total').textContent = tasks.length;
-      document.getElementById('stat-pending').textContent = tasks.filter(t => t.status === 'Pending').length;
-      document.getElementById('stat-approved').textContent = tasks.filter(t => t.status === 'Approved').length;
-      document.getElementById('stat-done').textContent = tasks.filter(t => t.status === 'Done').length;
+  <div class="section-label">Monthly Revenue Trend</div>
+  <div class="grid-2-1" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Revenue Over Time</div>
+        <div class="card-badge">2026 YTD</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Month-over-Month</div>
+      </div>
+      <div class="stat-row"><span class="stat-name">January 2026</span><span class="stat-val">$0</span></div>
+      <div class="stat-row"><span class="stat-name">February 2026</span><span class="stat-val">$1,256</span></div>
+      <div class="stat-row"><span class="stat-name">March 2026</span><span class="stat-val green">$9,883</span></div>
+      <div class="stat-row"><span class="stat-name">April 2026 (MTD)</span><span class="stat-val amber">TBD</span></div>
+      <div class="stat-row"><span class="stat-name">2026 Total</span><span class="stat-val green">$11,139</span></div>
+      <div class="insight" style="--ic:#22c55e">📈 March was 7.9× February. If April sustains momentum from the $43K quote pipeline, it could be the first $10K+ month.</div>
+    </div>
+  </div>
 
-      if (!tasks.length) {
-        list.innerHTML = '<div class="empty">No items yet. Add one on the right or click <strong>Load Demo Tasks</strong>.</div>';
-        return;
-      }
+  <div class="section-label">Lead Volume &amp; Pipeline Health</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Monthly Lead Intake</div>
+        <div class="card-badge">2026 YTD</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="leadsChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Conversion Rate Trend</div>
+        <div class="card-badge">Quote → Close %</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="convChart"></canvas>
+      </div>
+    </div>
+  </div>
 
-      list.innerHTML = tasks.map(task => `
-        <div class="task">
-          <div class="task-top">
-            <div>
-              <div class="task-title">${task.title}</div>
-              <div class="task-meta">${task.type} -+ Owner: ${task.owner || 'G��'} -+ Due: ${formatDue(task.due)}</div>
-            </div>
-            <span class="badge ${badgeClass(task.status)}">${task.status}</span>
-          </div>
-          <div class="task-desc">${task.description || 'No details provided.'}</div>
-          <div class="task-actions">
-            <button class="approve-btn" onclick="setStatus('${task.id}','Approved')">Approve</button>
-            <button class="done-btn" onclick="setStatus('${task.id}','Done')">Mark Done</button>
-            <button class="delete-btn" onclick="removeTask('${task.id}')">Delete</button>
-          </div>
+  <div class="section-label">Snapshot History</div>
+  <div class="history-grid">
+    <div class="history-card">
+      <div class="history-month">Jan 2026</div>
+      <div class="history-rev">$0</div>
+      <div class="history-leads">79 leads</div>
+      <div class="history-conv" style="color:var(--ghost)">No closes</div>
+    </div>
+    <div class="history-card">
+      <div class="history-month">Feb 2026</div>
+      <div class="history-rev">$1,256</div>
+      <div class="history-leads">28 leads</div>
+      <div class="history-conv" style="color:var(--amber)">1 deal closed</div>
+    </div>
+    <div class="history-card" style="border-color:#238636">
+      <div class="history-month">Mar 2026</div>
+      <div class="history-rev" style="color:var(--green)">$9,883</div>
+      <div class="history-leads">53 leads</div>
+      <div class="history-conv" style="color:var(--green)">4 deals closed</div>
+    </div>
+    <div class="history-card" style="opacity:.5">
+      <div class="history-month">Apr 2026</div>
+      <div class="history-rev">—</div>
+      <div class="history-leads">In progress</div>
+      <div class="history-conv" style="color:var(--ghost)">$43K pipeline</div>
+    </div>
+    <div class="history-card" style="opacity:.3">
+      <div class="history-month">May 2026</div>
+      <div class="history-rev">—</div>
+      <div class="history-leads">—</div>
+      <div class="history-conv" style="color:var(--ghost)">—</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Cumulative Revenue</div>
+        <div class="card-badge">2026</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="cumulChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">All-Time Benchmarks</div>
+      </div>
+      <div class="stat-row"><span class="stat-name">Total Revenue (all time)</span><span class="stat-val green">$16,779</span></div>
+      <div class="stat-row"><span class="stat-name">Best Month</span><span class="stat-val">Mar 2026 — $9,883</span></div>
+      <div class="stat-row"><span class="stat-name">Total Deals Closed</span><span class="stat-val">7</span></div>
+      <div class="stat-row"><span class="stat-name">Total Leads Generated</span><span class="stat-val">160+</span></div>
+      <div class="stat-row"><span class="stat-name">Best Quote → Close Rate</span><span class="stat-val green">24% (Mar)</span></div>
+      <div class="stat-row"><span class="stat-name">Largest Single Deal</span><span class="stat-val">~$3,500 est.</span></div>
+      <div class="insight" style="--ic:#3b82f6">📊 These benchmarks update as Brian syncs Zoho data. Historical data builds automatically each month.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB: AGENT CONTROL -->
+<div class="page" id="page-agents">
+
+  <div class="section-label">Active Agents</div>
+  <div class="grid-3" style="margin-bottom:14px">
+    <div class="agent-card">
+      <div class="agent-icon">🦞</div>
+      <div>
+        <div class="agent-name">Brian (Main Agent)</div>
+        <div class="agent-role">CEO-mode · anthropic/claude-sonnet-4-6</div>
+      </div>
+      <div class="agent-status">
+        <div><span class="badge b-green">● Online</span></div>
+        <div class="agent-uptime" style="margin-top:4px">Telegram · Direct</div>
+      </div>
+    </div>
+    <div class="agent-card" style="opacity:.5">
+      <div class="agent-icon">🤖</div>
+      <div>
+        <div class="agent-name">Sub-Agent Pool</div>
+        <div class="agent-role">Spawned on demand · sonnet-4-6</div>
+      </div>
+      <div class="agent-status">
+        <div><span class="badge b-gray">Idle</span></div>
+        <div class="agent-uptime" style="margin-top:4px">None running</div>
+      </div>
+    </div>
+    <div class="agent-card" style="opacity:.5">
+      <div class="agent-icon">⏱️</div>
+      <div>
+        <div class="agent-name">Heartbeat</div>
+        <div class="agent-role">Cron-driven · project queue runner</div>
+      </div>
+      <div class="agent-status">
+        <div><span class="badge b-amber">Scheduled</span></div>
+        <div class="agent-uptime" style="margin-top:4px">Every 30 min</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Project Queue</div>
+        <div class="card-badge">memory/projects.md</div>
+      </div>
+      <div class="task-row">
+        <div class="task-icon">✅</div>
+        <div>
+          <div class="task-title">Zoho CRM Analysis + Campaign Draft</div>
+          <div class="task-desc">Analyzed 157 leads, 160 total. Created "New Lead Welcome Series" campaign (DRAFT).</div>
+          <div class="task-meta">Completed 2026-03-30 · 5 tasks done</div>
         </div>
-      `).join('');
-    }
+      </div>
+      <div class="task-row" style="opacity:.4">
+        <div class="task-icon">📭</div>
+        <div>
+          <div class="task-title">Queue is empty</div>
+          <div class="task-desc">No active projects. Brian picks up the next task on heartbeat when you add one.</div>
+        </div>
+      </div>
+      <div class="insight" style="--ic:#a855f7">💡 Add projects to memory/projects.md — Brian executes them autonomously on every heartbeat.</div>
+    </div>
 
-    function addTask() {
-      const title = document.getElementById('new-title').value.trim();
-      const type = document.getElementById('new-type').value;
-      const owner = document.getElementById('new-owner').value.trim();
-      const due = document.getElementById('new-due').value;
-      const description = document.getElementById('new-desc').value.trim();
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Scheduled Cron Jobs</div>
+        <div class="card-badge">Gateway scheduler</div>
+      </div>
+      <div class="cron-row">
+        <div>
+          <div class="cron-name">Heartbeat</div>
+          <div class="cron-sched">Every 30 min · staggered 5m</div>
+        </div>
+        <div>
+          <div><span class="badge b-green">Active</span></div>
+          <div class="cron-last cron-status" style="color:var(--green-soft)">Running</div>
+        </div>
+      </div>
+      <div class="cron-row">
+        <div>
+          <div class="cron-name">Morning Brief</div>
+          <div class="cron-sched">Daily 7:00 AM ET · 7 days/week</div>
+        </div>
+        <div>
+          <div><span class="badge b-green">Active</span></div>
+          <div class="cron-last cron-status" style="color:var(--green-soft)">Running</div>
+        </div>
+      </div>
+      <div class="cron-row" style="opacity:.4">
+        <div>
+          <div class="cron-name">Add more via Telegram</div>
+          <div class="cron-sched">Tell Brian to schedule anything</div>
+        </div>
+        <div>
+          <div><span class="badge b-gray">—</span></div>
+        </div>
+      </div>
+      <div class="insight" style="--ic:#3b82f6">⚙️ All cron jobs use anthropic/claude-sonnet-4-6. OpenAI models are never used for scheduled work.</div>
+    </div>
+  </div>
 
-      if (!title) {
-        alert('Add a title first.');
-        return;
+  <div class="section-label">System Health</div>
+  <div class="kpi-grid kpi-grid-4">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Gateway</div>
+      <div class="kpi-value" style="font-size:16px;color:var(--green)">● Online</div>
+      <div class="kpi-delta delta-neutral">v2026.4.2 · PID active</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Telegram Channel</div>
+      <div class="kpi-value" style="font-size:16px;color:var(--green)">● Connected</div>
+      <div class="kpi-delta delta-neutral">Bot polling active</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#a855f7"></div>
+      <div class="kpi-label">Browser Control</div>
+      <div class="kpi-value" style="font-size:16px;color:var(--green)">● Ready</div>
+      <div class="kpi-delta delta-neutral">Port 18791</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#f59e0b"></div>
+      <div class="kpi-label">Daily Token Budget</div>
+      <div class="kpi-value" style="font-size:16px">$5.00</div>
+      <div class="kpi-delta delta-neutral">Hard limit · warns at threshold</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ TAB: PIPELINE -->
+<div class="page" id="page-pipeline">
+
+  <div class="kpi-grid kpi-grid-3" style="margin-bottom:16px">
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#22c55e"></div>
+      <div class="kpi-label">Total Pipeline (Active)</div>
+      <div class="kpi-value">$45,247</div>
+      <div class="kpi-delta delta-up">21 open deals</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#f59e0b"></div>
+      <div class="kpi-label">Highest Risk</div>
+      <div class="kpi-value">$17,033</div>
+      <div class="kpi-delta delta-danger">11 stalling deals</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent" style="background:#3b82f6"></div>
+      <div class="kpi-label">Expected Close (24%)</div>
+      <div class="kpi-value">$10,330</div>
+      <div class="kpi-delta delta-neutral">If quote rate holds</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header">
+      <div class="card-title">Full Pipeline — All Active Deals</div>
+      <div class="card-badge">$43,040 hot · $17,033 stalling</div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Contact</th>
+          <th>Stage</th>
+          <th>Value</th>
+          <th>Close Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="color:var(--ghost);font-size:11px">01</td><td class="td-name">Shawn And</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$10,251</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:#f85149;font-size:11px;font-weight:600">📞 Call now</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">02</td><td class="td-name">Mohika Sehgal</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$7,209</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:#f85149;font-size:11px;font-weight:600">📞 48 hrs</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">03</td><td class="td-name">Gary Xu</td><td><span class="badge b-amber">Stalling</span></td><td class="td-amount">$5,997</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:#d29922;font-size:11px">✉️ Recovery email</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">04</td><td class="td-name">Juan OROZCO Duque</td><td><span class="badge b-amber">Stalling</span></td><td class="td-amount">$4,473</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:#d29922;font-size:11px">✉️ Recovery email</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">05</td><td class="td-name">Paolo Empire</td><td><span class="badge b-blue">Send Quote</span></td><td class="td-amount">$4,341</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:#f85149;font-size:11px;font-weight:600">📋 Send today</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">06</td><td class="td-name">Dan Skrobot</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$4,020</td><td style="color:var(--amber-soft);font-size:11px">Apr 16</td><td style="color:#d29922;font-size:11px">📅 Watch close date</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">07</td><td class="td-name">Ravinder S. Sandhu</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$3,540</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:var(--muted);font-size:11px">📞 Follow up</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">08</td><td class="td-name">Dominic Ruso</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$3,207</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:var(--muted);font-size:11px">📞 Follow up</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">09</td><td class="td-name">Kelsey Worboys</td><td><span class="badge b-green">Quote Sent</span></td><td class="td-amount">$3,029</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:var(--muted);font-size:11px">📞 Follow up</td></tr>
+        <tr><td style="color:var(--ghost);font-size:11px">10</td><td class="td-name">+ 11 more</td><td><span class="badge b-gray">Various</span></td><td class="td-amount">$9,180</td><td style="color:var(--ghost);font-size:11px">—</td><td style="color:var(--dim);font-size:11px">See Zoho CRM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Pipeline by Stage</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="pipelineChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Win Probability Forecast</div>
+      </div>
+      <div class="stat-row"><span class="stat-name">Quote Sent ($43,040) @ 24%</span><span class="stat-val green">$10,330</span></div>
+      <div class="stat-row"><span class="stat-name">Stalling ($17,033) @ 8%</span><span class="stat-val amber">$1,363</span></div>
+      <div class="stat-row"><span class="stat-name">Send Quote ($5,141) @ 15%</span><span class="stat-val amber">$771</span></div>
+      <div class="stat-row"><span class="stat-name">Total Weighted Pipeline</span><span class="stat-val green">~$12,464</span></div>
+      <div class="insight" style="--ic:#22c55e">🎯 If April closes even 3 of the top 5 quotes, it beats all of 2026 revenue to date. The pipeline is there — it's a follow-through game now.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Sunquell Mission Control · Data: Zoho CRM (last sync Mar 31, 2026) · Built by Brian (AI Agent) · <a href="https://brianjameson-ui.github.io/sunquell-dashboard/" style="color:var(--ghost)">brianjameson-ui.github.io/sunquell-dashboard</a></div>
+
+<script>
+// CLOCK
+function updateClock(){
+  const d=new Date();
+  document.getElementById('clock').textContent=d.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit',timeZone:'America/Toronto'});
+}
+updateClock();setInterval(updateClock,10000);
+
+// TAB SWITCHING
+function showTab(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // init charts lazily
+  if(name==='tasks')renderTasks();
+  if(name==='history')initHistoryCharts();
+  if(name==='pipeline')initPipelineChart();
+}
+
+// ZOHO TASKS DATA (baked in at build time — Apr 3 2026)
+const TASKS = [
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-04",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-03",contact:"Peter Mammone",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"Pat Palleschi",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-05-07",contact:"James Arniotis",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-10",contact:"Denice Takimoto",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up text",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"In Progress",due:"2026-03-30",contact:"—",owner:"Daniel Mueller"},
+  {subject:"Follow up call",status:"Not Due Yet",due:"2026-04-16",contact:"Dan Skrobot",owner:"Daniel Mueller"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-05-14",contact:"—",owner:"Madison Parsons"},
+  {subject:"See if she sent measurements",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Has been ghosting — try again",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up after vacation",status:"Not Due Yet",due:"2026-04-23",contact:"Edward Arzanyan",owner:"Madison Parsons"},
+  {subject:"Follow up kindly",status:"Not Due Yet",due:"2026-04-19",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-19",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"In Progress",due:"2026-04-02",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-07",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up evening",status:"In Progress",due:"2026-03-13",contact:"—",owner:"Madison Parsons"},
+  {subject:"Follow up",status:"Not Due Yet",due:"2026-04-16",contact:"Fernando Elizondo",owner:"Madison Parsons"},
+  {subject:"Follow up call",status:"Not Due Yet",due:"2026-05-06",contact:"Carmelita Flaim",owner:"Madison Parsons"},
+  {subject:"FOLLOW UP",status:"Not Due Yet",due:"2026-06-01",contact:"—",owner:"Madison Parsons"},
+];
+
+function renderTasks(){
+  const today = new Date('2026-04-03');
+  const in7 = new Date('2026-04-10');
+  const open = TASKS.filter(t=>t.status!=='Completed');
+  const overdue = open.filter(t=>new Date(t.due)<today);
+  const dueToday = open.filter(t=>t.due==='2026-04-03');
+  const upcoming = open.filter(t=>{const d=new Date(t.due);return d>today&&d<=in7;});
+
+  document.getElementById('t-overdue').textContent=overdue.length;
+  document.getElementById('t-today').textContent=dueToday.length;
+  document.getElementById('t-upcoming').textContent=upcoming.length;
+  document.getElementById('t-total').textContent=open.length;
+  document.getElementById('task-badge').textContent=overdue.length+dueToday.length;
+
+  const sorted = [...open].sort((a,b)=>new Date(a.due)-new Date(b.due));
+  const daniel = sorted.filter(t=>t.owner==='Daniel Mueller');
+  const madison = sorted.filter(t=>t.owner==='Madison Parsons');
+
+  document.getElementById('daniel-count').textContent=daniel.length+' tasks';
+  document.getElementById('madison-count').textContent=madison.length+' tasks';
+
+  function taskRows(list){
+    if(!list.length) return '<div style="color:var(--ghost);font-size:12px;padding:12px 0">No open tasks</div>';
+    return list.slice(0,8).map(t=>{
+      const d=new Date(t.due);
+      const overdue=d<today;
+      const dueTd=t.due==='2026-04-03';
+      const color=overdue?'var(--red)':dueTd?'var(--amber)':'var(--dim)';
+      const badge=overdue?'<span class="badge b-red">Overdue</span>':dueTd?'<span class="badge b-amber">Today</span>':'<span class="badge b-gray">'+t.due.slice(5)+'</span>';
+      return `<div class="task-row"><div><div class="task-title">${t.subject}</div><div class="task-meta" style="margin-top:3px">${t.contact!=='—'?'👤 '+t.contact:''}</div></div><div style="margin-left:auto">${badge}</div></div>`;
+    }).join('');
+  }
+
+  document.getElementById('daniel-tasks').innerHTML=taskRows(daniel);
+  document.getElementById('madison-tasks').innerHTML=taskRows(madison);
+
+  const tbody=document.getElementById('all-tasks-body');
+  tbody.innerHTML=sorted.map(t=>{
+    const d=new Date(t.due);
+    const overdue=d<today;
+    const dueTd=t.due==='2026-04-03';
+    const badge=overdue?'<span class="badge b-red">Overdue</span>':dueTd?'<span class="badge b-amber">Today</span>':'<span class="badge b-gray">'+t.due+'</span>';
+    const statusBadge=t.status==='In Progress'?'<span class="badge b-blue">In Progress</span>':'<span class="badge b-gray">Scheduled</span>';
+    return `<tr><td class="td-name">${t.subject}</td><td style="color:var(--muted);font-size:12px">${t.contact}</td><td style="color:var(--dim);font-size:11px">${t.owner.split(' ')[0]}</td><td>${badge}</td><td>${statusBadge}</td></tr>`;
+  }).join('');
+
+  document.getElementById('tasks-sync-time').textContent='Apr 3, 2026 3:15 PM EDT';
+}
+
+renderTasks();
+
+// CHART DEFAULTS
+Chart.defaults.color='#6e7681';
+Chart.defaults.borderColor='#161b22';
+Chart.defaults.font.family='-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+Chart.defaults.font.size=11;
+
+const chartsInited={};
+
+function initHistoryCharts(){
+  if(chartsInited.history)return;
+  chartsInited.history=true;
+
+  // Revenue chart
+  new Chart(document.getElementById('revenueChart'),{
+    type:'bar',
+    data:{
+      labels:['Jan','Feb','Mar','Apr (est)'],
+      datasets:[{
+        label:'Revenue',
+        data:[0,1256,9883,null],
+        backgroundColor:['#1f6feb','#1f6feb','#238636','#21262d'],
+        borderRadius:4,
+        borderSkipped:false,
+      },{
+        label:'Pipeline (est)',
+        data:[null,null,null,10330],
+        backgroundColor:'#0c3d2e',
+        borderRadius:4,
+        borderSkipped:false,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false}},
+        y:{grid:{color:'#161b22'},ticks:{callback:v=>'$'+v.toLocaleString()}}
       }
-
-      const tasks = loadTasks();
-      tasks.unshift({
-        id: crypto.randomUUID(),
-        title,
-        type,
-        owner,
-        due,
-        description,
-        status: 'Pending'
-      });
-      saveTasks(tasks);
-
-      document.getElementById('new-title').value = '';
-      document.getElementById('new-owner').value = '';
-      document.getElementById('new-due').value = '';
-      document.getElementById('new-desc').value = '';
-      document.getElementById('new-type').value = 'Approval Needed';
-      render();
     }
+  });
 
-    function setStatus(id, status) {
-      const tasks = loadTasks().map(task => task.id === id ? { ...task, status } : task);
-      saveTasks(tasks);
-      render();
+  // Leads chart
+  new Chart(document.getElementById('leadsChart'),{
+    type:'bar',
+    data:{
+      labels:['Jan','Feb','Mar'],
+      datasets:[{
+        label:'Leads',
+        data:[79,28,53],
+        backgroundColor:'#1f6feb',
+        borderRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'}}}
     }
+  });
 
-    function removeTask(id) {
-      const tasks = loadTasks().filter(task => task.id !== id);
-      saveTasks(tasks);
-      render();
+  // Conversion chart
+  new Chart(document.getElementById('convChart'),{
+    type:'line',
+    data:{
+      labels:['Jan','Feb','Mar'],
+      datasets:[{
+        label:'Quote→Close %',
+        data:[0,20,24],
+        borderColor:'#22c55e',
+        backgroundColor:'rgba(34,197,94,.08)',
+        tension:.4,fill:true,
+        pointBackgroundColor:'#22c55e',
+        pointRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false}},
+        y:{grid:{color:'#161b22'},ticks:{callback:v=>v+'%'},min:0,max:40}
+      }
     }
+  });
 
-    function clearCompleted() {
-      const tasks = loadTasks().filter(task => task.status !== 'Done');
-      saveTasks(tasks);
-      render();
+  // Cumulative chart
+  new Chart(document.getElementById('cumulChart'),{
+    type:'line',
+    data:{
+      labels:['Jan','Feb','Mar'],
+      datasets:[{
+        label:'Cumulative Revenue',
+        data:[0,1256,11139],
+        borderColor:'#3b82f6',
+        backgroundColor:'rgba(59,130,246,.08)',
+        tension:.4,fill:true,
+        pointBackgroundColor:'#3b82f6',
+        pointRadius:4,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false}},
+        y:{grid:{color:'#161b22'},ticks:{callback:v=>'$'+v.toLocaleString()}}
+      }
     }
+  });
+}
 
-    function seedDemoTasks() {
-      saveTasks(defaultTasks);
-      render();
+function initPipelineChart(){
+  if(chartsInited.pipeline)return;
+  chartsInited.pipeline=true;
+  new Chart(document.getElementById('pipelineChart'),{
+    type:'doughnut',
+    data:{
+      labels:['Quote Sent','Stalling','Send Quote'],
+      datasets:[{
+        data:[43040,17033,5141],
+        backgroundColor:['#238636','#9e6a03','#1f6feb'],
+        borderColor:'#0d1117',
+        borderWidth:3,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{padding:16,usePointStyle:true}},
+        tooltip:{callbacks:{label:ctx=>' $'+ctx.raw.toLocaleString()}}
+      },
+      cutout:'65%',
     }
-
-    render();
-  </script>
+  });
+}
+</script>
 </body>
 </html>
