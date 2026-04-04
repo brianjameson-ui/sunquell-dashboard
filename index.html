@@ -973,24 +973,42 @@ function renderApprovals(){
         </div>
         <div class="approval-body">${item.subject ? 'Subject: ' + item.subject + '\n\n' : ''}${item.body || ''}</div>
         ${item.comment ? `<div class="comment-note"><strong>Comments:</strong> ${item.comment}</div>` : ''}
-        <div class="insight" style="--ic:#8b5cf6;margin-top:0">For now, approvals sync from GitHub JSON. Button clicks update the page state visually; heartbeat/back-end execution will read the shared JSON layer next.</div>
+        <textarea id="approval-comment-${idx}" class="text-area" placeholder="Comments for revision / rejection...">${item.comment || ''}</textarea>
+        <div class="button-row">
+          <button class="action-btn approve" onclick="updateApproval(${idx}, 'Approved', false)">Approve</button>
+          <button class="action-btn reject" onclick="updateApproval(${idx}, 'Rejected', false)">Reject</button>
+          <button class="action-btn revise" onclick="sendBackApproval(${idx})">Send Back w/ Comments</button>
+          ${(item.kind==='Email Approval' || item.kind==='Twilio Text') ? `<button class="action-btn send" onclick="updateApproval(${idx}, 'Approved', true)">Approve & Send</button>` : ''}
+        </div>
+        <div class="insight" style="--ic:#8b5cf6;margin-top:10px">Execution path: local relay at <code>127.0.0.1:8787</code> updates shared approval state and can trigger sends for approved email/text items.</div>
       </div>`;
   }).join('');
 }
 
-function updateApproval(idx, status){
-  APPROVALS[idx].status = status;
-  renderApprovals();
+async function updateApproval(idx, status, execute){
+  const item = APPROVALS[idx];
+  const box = document.getElementById(`approval-comment-${idx}`);
+  const comment = box ? box.value.trim() : '';
+  try {
+    const res = await fetch('http://127.0.0.1:8787/approvals/action', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ id:item.id, status, comment, execute: !!execute })
+    });
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error || 'Relay request failed');
+    await loadApprovals();
+  } catch(err) {
+    alert('Approval relay error: ' + err.message);
+  }
 }
 
 function sendBackApproval(idx){
-  APPROVALS[idx].status = 'Needs Revision';
-  renderApprovals();
+  updateApproval(idx, 'Needs Revision', false);
 }
 
 function sendApprovedItem(idx){
-  APPROVALS[idx].status = 'Sent';
-  renderApprovals();
+  updateApproval(idx, 'Approved', true);
 }
 
 loadApprovals();
