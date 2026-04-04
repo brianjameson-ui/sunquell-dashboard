@@ -918,44 +918,19 @@ function renderTasks(){
 
 renderTasks();
 
-const APPROVALS = [
-  {
-    kind:'Email Approval',
-    title:'Approve follow-up email to Dan Skrobot',
-    owner:'Daniel',
-    due:'2026-04-04 10:00',
-    status:'Pending Approval',
-    color:'var(--blue)',
-    body:'Subject: Quick follow-up on your quote\n\nHey Dan — just checking in on the quote I sent over. Happy to answer any questions and help you get this wrapped up this week.'
-  },
-  {
-    kind:'Social Content',
-    title:'Review weekend promo caption',
-    owner:'Daniel',
-    due:'2026-04-04 13:00',
-    status:'Pending Approval',
-    color:'var(--purple)',
-    body:'Caption: Summer heat is coming. Reduce glare, protect interiors, and keep your home cooler with professional window film. Message us for a free quote.'
-  },
-  {
-    kind:'CRM Task',
-    title:'Call Peter Mammone re: active quote',
-    owner:'Daniel',
-    due:'2026-04-04 09:00',
-    status:'Approved',
-    color:'var(--green)',
-    body:'Zoho task surfaced by Brian. Peter is live in follow-up and should get a same-day call.'
-  },
-  {
-    kind:'Email Revision',
-    title:'Rewrite recovery email for Gary Xu',
-    owner:'Brian',
-    due:'2026-04-04 11:30',
-    status:'Needs Revision',
-    color:'var(--red)',
-    body:'Current draft is too passive. Daniel wants a more direct “still the right time?” angle with a cleaner CTA.'
+let APPROVALS = [];
+
+async function loadApprovals(){
+  try{
+    const res = await fetch('./approvals.json?ts=' + Date.now());
+    const data = await res.json();
+    APPROVALS = Array.isArray(data.items) ? data.items : [];
+  }catch(err){
+    APPROVALS = [];
+    console.error('Failed to load approvals.json', err);
   }
-];
+  renderApprovals();
+}
 
 function renderApprovals(){
   const pending = APPROVALS.filter(a=>a.status==='Pending Approval').length;
@@ -968,6 +943,11 @@ function renderApprovals(){
   document.getElementById('approval-badge').textContent = pending + revise;
 
   const list = document.getElementById('approval-list');
+  if(!APPROVALS.length){
+    list.innerHTML = '<div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">No approval items loaded.</div>';
+    return;
+  }
+
   list.innerHTML = APPROVALS.map((item, idx)=>{
     const statusBadge = item.status==='Approved'
       ? '<span class="badge b-blue">Approved</span>'
@@ -991,49 +971,29 @@ function renderApprovals(){
           </div>
           <div>${statusBadge}</div>
         </div>
-        <div class="approval-body">${item.body}</div>
+        <div class="approval-body">${item.subject ? 'Subject: ' + item.subject + '\n\n' : ''}${item.body || ''}</div>
         ${item.comment ? `<div class="comment-note"><strong>Comments:</strong> ${item.comment}</div>` : ''}
-        <textarea id="approval-comment-${idx}" class="text-area" placeholder="Comments for revision / rejection..."></textarea>
-        <div class="button-row">
-          <button class="action-btn approve" onclick="updateApproval(${idx}, 'Approved')">Approve</button>
-          <button class="action-btn reject" onclick="updateApproval(${idx}, 'Rejected')">Reject</button>
-          <button class="action-btn revise" onclick="sendBackApproval(${idx})">Send Back w/ Comments</button>
-          ${sendButton}
-        </div>
+        <div class="insight" style="--ic:#8b5cf6;margin-top:0">For now, approvals sync from GitHub JSON. Button clicks update the page state visually; heartbeat/back-end execution will read the shared JSON layer next.</div>
       </div>`;
   }).join('');
 }
 
 function updateApproval(idx, status){
-  const box = document.getElementById(`approval-comment-${idx}`);
-  if(box && box.value.trim()) APPROVALS[idx].comment = box.value.trim();
   APPROVALS[idx].status = status;
   renderApprovals();
 }
 
 function sendBackApproval(idx){
-  const box = document.getElementById(`approval-comment-${idx}`);
-  if(!box || !box.value.trim()){
-    alert('Add comments first so Brian knows what to change.');
-    return;
-  }
-  APPROVALS[idx].comment = box.value.trim();
   APPROVALS[idx].status = 'Needs Revision';
   renderApprovals();
 }
 
 function sendApprovedItem(idx){
-  const item = APPROVALS[idx];
-  if(item.status!=='Approved'){
-    alert('Approve it first.');
-    return;
-  }
-  item.status = 'Sent';
-  item.comment = `Queued for automation send at ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  APPROVALS[idx].status = 'Sent';
   renderApprovals();
 }
 
-renderApprovals();
+loadApprovals();
 
 // CHART DEFAULTS
 Chart.defaults.color='#6e7681';
