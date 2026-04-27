@@ -1,0 +1,59 @@
+{
+  "updatedAt": "2026-04-28T00:27:03-04:00",
+  "totalLeads": 50,
+  "byStage": {
+    "New": 50
+  },
+  "recentLeads": [
+    {
+      "name": "Wilfred P",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Janusz Packowski",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "April Goodjohn",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Erik Ledin",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Steve Matheson",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Sami Sami",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Franka Tro",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Alice Muir",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Ryan Bernier",
+      "status": "?",
+      "modified": ""
+    },
+    {
+      "name": "Charish Charish",
+      "status": "?",
+      "modified": ""
+    }
+  ]
+}

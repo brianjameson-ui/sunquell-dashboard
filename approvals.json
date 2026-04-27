@@ -1,55 +1,16 @@
 {
-  "updatedAt": "2026-04-03T21:12:00-04:00",
+  "updatedAt": "2026-04-28T00:27:03-04:00",
   "items": [
     {
-      "id": "crm-peter-mammone-followup",
-      "kind": "CRM Task",
-      "title": "Call Peter Mammone re: active quote",
-      "owner": "Daniel",
-      "due": "2026-04-04 09:00",
-      "status": "Pending Approval",
+      "id": "clear",
+      "kind": "Status",
+      "title": "No approvals needed",
+      "owner": "Brian",
+      "due": "2026-04-28",
+      "status": "Complete",
       "channel": "crm",
-      "body": "Zoho task surfaced by Brian. Peter is live in follow-up and should get a same-day call.",
+      "body": "Brian checked 50 leads. Nothing pending approval.",
       "comment": "",
-      "sentAt": ""
-    },
-    {
-      "id": "email-dan-skrobot-followup",
-      "kind": "Email Approval",
-      "title": "Approve follow-up email to Dan Skrobot",
-      "owner": "Daniel",
-      "due": "2026-04-04 10:00",
-      "status": "Pending Approval",
-      "channel": "gmail",
-      "to": "",
-      "subject": "Quick follow-up on your quote",
-      "body": "Hey Dan — just checking in on the quote I sent over. Happy to answer any questions and help you get this wrapped up this week.",
-      "comment": "",
-      "sentAt": ""
-    },
-    {
-      "id": "social-weekend-promo",
-      "kind": "Social Content",
-      "title": "Review weekend promo caption",
-      "owner": "Daniel",
-      "due": "2026-04-04 13:00",
-      "status": "Pending Approval",
-      "channel": "social",
-      "body": "Summer heat is coming. Reduce glare, protect interiors, and keep your home cooler with professional window film. Message us for a free quote.",
-      "comment": "",
-      "sentAt": ""
-    },
-    {
-      "id": "sms-gary-xu-recovery",
-      "kind": "Twilio Text",
-      "title": "Approve recovery text to Gary Xu",
-      "owner": "Daniel",
-      "due": "2026-04-04 11:30",
-      "status": "Needs Revision",
-      "channel": "twilio",
-      "to": "",
-      "body": "Hey Gary — just checking in. Still the right time to move forward on the window film quote?",
-      "comment": "Make this more direct and stronger.",
       "sentAt": ""
     }
   ]
