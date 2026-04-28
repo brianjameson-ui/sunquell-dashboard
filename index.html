@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Sunquell Mission Control",
+  "schemaVersion": 1,
+  "description": "Sunquell Mission Control dashboard — live CRM data from Zoho (synced Apr 28, 2026). Shows pipeline, tasks, revenue trends, lead sources, and priority actions for Daniel and Madison."
+}
+</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -6,114 +13,113 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;min-height:100vh}
-:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#c9d1d9;--muted:#8b949e;--dim:#6e7681;--ghost:#484f58;--green:#238636;--gbright:#2ea043;--blue:#1f6feb;--amber:#d29922;--red:#f85149;--purple:#8b5cf6;--teal:#0d9488}
-.hdr{position:sticky;top:0;z-index:100;background:#010409;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;height:48px;gap:0}
-.logo{font-size:13px;font-weight:700;white-space:nowrap;margin-right:20px;letter-spacing:-.3px}
-.tabs{display:flex;align-items:stretch;height:100%;flex:1;overflow-x:auto}
+body{background:#080d13;color:#dde6f0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;font-size:13px;min-height:100vh}
+:root{--bg:#080d13;--surface:#0f1621;--surface2:#141d2b;--border:#1c2b3a;--text:#dde6f0;--muted:#6e8aa0;--dim:#3d5468;--ghost:#2a3d4f;--green:#238636;--gbright:#3fb950;--blue:#1d7cf8;--amber:#e3a008;--red:#f85149;--purple:#a371f7;--teal:#2dd4bf}
+.hdr{position:sticky;top:0;z-index:100;background:rgba(8,13,19,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;height:52px;gap:0}
+.logo{font-size:13px;font-weight:800;white-space:nowrap;margin-right:24px;letter-spacing:-.4px;background:linear-gradient(120deg,#e2edf8 0%,#7a9ab8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tabs{display:flex;align-items:center;height:100%;flex:1;overflow-x:auto;gap:2px}
 .tabs::-webkit-scrollbar{height:0}
-.tab{background:none;border:none;color:var(--muted);cursor:pointer;font:12px inherit;padding:0 12px;white-space:nowrap;height:100%;display:flex;align-items:center;gap:5px;transition:color .15s}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--text);border-bottom:2px solid var(--text)}
-.bx{display:inline-block;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px;background:var(--red);color:#fff}
-.hdr-r{display:flex;align-items:center;gap:10px;margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gbright)}
-.pg{display:none;padding:16px;max-width:1200px;margin:0 auto}
+.tab{background:none;border:none;color:var(--muted);cursor:pointer;font:12px inherit;padding:5px 11px;white-space:nowrap;height:32px;display:flex;align-items:center;gap:5px;transition:color .15s,background .15s;border-radius:6px}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.055)}
+.tab.active{color:#dde6f0;background:rgba(255,255,255,.09)}
+.bx{display:inline-block;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;background:var(--red);color:#fff;line-height:1.6;letter-spacing:.3px}
+.hdr-r{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gbright);box-shadow:0 0 7px rgba(63,185,80,.7);animation:pulse 3s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 7px rgba(63,185,80,.7)}50%{box-shadow:0 0 12px rgba(63,185,80,.9)}}
+.pg{display:none;padding:20px;max-width:1280px;margin:0 auto}
 .pg.on{display:block}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
-.ct{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.kl{font-size:11px;color:var(--muted);margin-bottom:5px}
-.kv{font-size:26px;font-weight:700;line-height:1}
-.ks{font-size:11px;color:var(--dim);margin-top:5px}
-.kd{font-size:11px;margin-top:3px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:16px;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:#253848;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.ct{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+.kl{font-size:11px;color:var(--muted);margin-bottom:7px;font-weight:500;letter-spacing:.1px}
+.kv{font-size:28px;font-weight:800;line-height:1;letter-spacing:-.8px}
+.ks{font-size:11px;color:var(--dim);margin-top:7px;line-height:1.4}
+.kd{font-size:11px;margin-top:4px;font-weight:600}
 .dup{color:var(--gbright)}.ddn{color:var(--red)}
-.bdg{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:12px}
-.br{background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.3)}
-.ba{background:rgba(210,153,34,.15);color:var(--amber);border:1px solid rgba(210,153,34,.3)}
-.bg{background:rgba(35,134,54,.15);color:var(--gbright);border:1px solid rgba(35,134,54,.3)}
-.bb{background:rgba(31,111,235,.15);color:var(--blue);border:1px solid rgba(31,111,235,.3)}
-.bw{background:rgba(110,118,129,.15);color:var(--muted);border:1px solid rgba(110,118,129,.3)}
-.bp{background:rgba(139,92,246,.15);color:var(--purple);border:1px solid rgba(139,92,246,.3)}
-.bt{background:rgba(13,148,136,.15);color:var(--teal);border:1px solid rgba(13,148,136,.3)}
-.mp{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(48,54,61,.4)}
+.bdg{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.2px;white-space:nowrap}
+.br{background:rgba(248,81,73,.1);color:#ff7b72;border:1px solid rgba(248,81,73,.22)}
+.ba{background:rgba(227,160,8,.1);color:#e3b341;border:1px solid rgba(227,160,8,.22)}
+.bg{background:rgba(63,185,80,.1);color:var(--gbright);border:1px solid rgba(63,185,80,.22)}
+.bb{background:rgba(29,124,248,.1);color:#58a6ff;border:1px solid rgba(29,124,248,.22)}
+.bw{background:rgba(110,138,160,.08);color:var(--muted);border:1px solid rgba(110,138,160,.18)}
+.bp{background:rgba(163,113,247,.1);color:var(--purple);border:1px solid rgba(163,113,247,.22)}
+.bt{background:rgba(45,212,191,.1);color:var(--teal);border:1px solid rgba(45,212,191,.22)}
+.mp{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(28,43,58,.8)}
 .mp:last-child{border-bottom:none}
 .ml{font-size:12px;color:var(--muted)}
 .mv{font-size:12px;font-weight:700;color:var(--text)}
-.ins{background:rgba(255,255,255,.04);border-left:3px solid var(--ic,var(--amber));padding:9px 11px;border-radius:0 5px 5px 0;font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
-.fr{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.ins{background:rgba(255,255,255,.03);border-left:3px solid var(--ic,var(--amber));padding:10px 13px;border-radius:0 7px 7px 0;font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}
+.fr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(28,43,58,.6)}
 .fr:last-child{border-bottom:none}
 .fs{font-size:12px;color:var(--text);flex:0 0 165px}
-.fb{flex:1;height:5px;background:var(--border);border-radius:3px}
-.fb div{height:100%;border-radius:3px}
+.fb{flex:1;height:6px;background:rgba(28,43,58,.9);border-radius:4px;overflow:hidden}
+.fb div{height:100%;border-radius:4px}
 .fc{font-size:11px;color:var(--muted);min-width:85px;text-align:right}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:10px;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.4px;padding:7px 8px;border-bottom:1px solid var(--border)}
-td{padding:9px 8px;border-bottom:1px solid rgba(48,54,61,.4);font-size:12px;color:var(--text)}
-tr:hover td{background:rgba(255,255,255,.02)}
-.tr{font-size:11px;color:var(--muted)}
-.tw{overflow-x:auto}
-.sbd{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.sb{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 12px;text-align:center;flex:1;min-width:70px}
-.sbv{font-size:20px;font-weight:700}
-.sbl{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase}
-.tkr{display:flex;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(48,54,61,.4);gap:8px}
+th{text-align:left;font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;padding:8px;border-bottom:1px solid var(--border)}
+td{padding:10px 8px;border-bottom:1px solid rgba(28,43,58,.5);font-size:12px;color:var(--text)}
+tr:hover td{background:rgba(255,255,255,.022)}
+.tr{font-size:11px;color:var(--muted)}.tw{overflow-x:auto}
+.st td{padding:6px 0;border-bottom:1px solid rgba(28,43,58,.5);font-size:12px}
+.st td:last-child{text-align:right;font-weight:700;color:var(--text)}
+.st td:first-child{color:var(--muted)}.rnk{color:var(--ghost);font-size:11px;font-weight:600}
+.sbd{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.sb{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:center;flex:1;min-width:75px}
+.sbv{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.sbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.tkr{display:flex;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(28,43,58,.5);gap:8px}
 .tkr:last-child{border-bottom:none}
-.tkt{font-size:12px;color:var(--text);line-height:1.4}
-.tkm{font-size:11px;color:var(--muted);margin-top:2px}
-.act{display:flex;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(48,54,61,.4);gap:10px}
+.tkt{font-size:12px;color:var(--text);line-height:1.5}
+.tkm{font-size:11px;color:var(--muted);margin-top:3px}
+.act{display:flex;align-items:flex-start;padding:12px 10px;border-bottom:1px solid rgba(28,43,58,.5);gap:12px;border-radius:7px;transition:background .15s;margin:0 -6px}
+.act:hover{background:rgba(255,255,255,.028)}
 .act:last-child{border-bottom:none}
-.ath{font-size:13px;font-weight:600;color:var(--text)}
-.atd{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.ath{font-size:13px;font-weight:700;color:var(--text)}
+.atd{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.55}
 .cw{height:170px;position:relative}
 .cwm{height:140px;position:relative}
 .cwl{height:210px;position:relative}
-.st td{padding:5px 0;border-bottom:1px solid rgba(48,54,61,.35);font-size:12px}
-.st td:last-child{text-align:right;font-weight:600;color:var(--text)}
-.st td:first-child{color:var(--muted)}
-.rnk{color:var(--ghost);font-size:11px}
-.foot{text-align:center;font-size:10px;color:var(--ghost);padding:16px;border-top:1px solid var(--border);margin-top:16px}
+.foot{text-align:center;font-size:10px;color:var(--ghost);padding:20px;border-top:1px solid var(--border);margin-top:8px;letter-spacing:.2px}
 </style>
 </head>
 <body>
 <div class="hdr">
-  <div class="logo">Sunquell Mission Control</div>
+  <div class="logo">⚡ Sunquell Mission Control</div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('crm',this)">CRM &amp; Sales <span class="bx" id="tb1">10</span></button>
     <button class="tab" onclick="showTab('tasks',this)">Tasks <span class="bx" id="tb2">10</span></button>
-    <button class="tab" onclick="showTab('approvals',this)">Approvals <span class="bx" style="background:var(--ghost)">0</span></button>
     <button class="tab" onclick="showTab('history',this)">Historical Stats</button>
-    <button class="tab" onclick="showTab('agents',this)">Agent Control</button>
-    <button class="tab" onclick="showTab('pipeline',this)">Pipeline Analytics</button>
+    <button class="tab" onclick="showTab('pipeline',this)">Pipeline</button>
     <button class="tab" onclick="showTab('analytics',this)">Analytics</button>
   </div>
-  <div class="hdr-r"><span class="dot"></span> Daniel Online &nbsp;&middot;&nbsp; <span id="clock">--:--</span></div>
+  <div class="hdr-r"><span class="dot"></span> Daniel Online &nbsp;·&nbsp; <span id="clock">--:--</span></div>
 </div>
 
 <!-- CRM TAB -->
 <div id="pg-crm" class="pg on">
   <div class="g3">
-    <div class="card"><div class="kl">Closed Revenue (Apr MTD)</div><div class="kv">$1,250</div><div class="kd ddn">↓ vs Mar ($9,883)</div><div class="ks">2 deals · $60K hot pipeline</div></div>
-    <div class="card"><div class="kl">Hot Pipeline</div><div class="kv">$60,039</div><div class="ks">Quote Sent + Booked · 26 deals</div></div>
-    <div class="card"><div class="kl">Stalling Pipeline</div><div class="kv" style="color:var(--amber)">$23,624</div><div class="ks">12 deals at risk</div></div>
+    <div class="card" style="border-top:2px solid var(--gbright)"><div class="kl">Closed Revenue (Apr MTD)</div><div class="kv">$1,250</div><div class="kd ddn">↓ vs Mar ($9,883)</div><div class="ks">2 deals · $60K hot pipeline</div></div>
+    <div class="card" style="border-top:2px solid var(--blue)"><div class="kl">Hot Pipeline</div><div class="kv" style="color:#58a6ff">$60,039</div><div class="ks">Quote Sent + Booked · 26 deals</div></div>
+    <div class="card" style="border-top:2px solid var(--amber)"><div class="kl">Stalling Pipeline</div><div class="kv" style="color:var(--amber)">$23,624</div><div class="ks">12 deals at risk</div></div>
   </div>
   <div class="g3">
     <div class="card"><div class="kl">Lead → Close Rate</div><div class="kv">5.4%</div><div class="ks">9 closed / 167 leads</div></div>
-    <div class="card"><div class="kl">Quote → Close Rate</div><div class="kv" style="color:var(--gbright)">24%</div><div class="ks">9 closed / ~37 quoted</div></div>
+    <div class="card" style="border-top:2px solid var(--gbright)"><div class="kl">Quote → Close Rate</div><div class="kv" style="color:var(--gbright)">24%</div><div class="ks">9 closed / ~37 quoted</div></div>
     <div class="card"><div class="kl">Avg Deal Size</div><div class="kv">$2,003</div><div class="ks">9 closed deals · all time</div></div>
   </div>
   <div class="g2">
     <div class="card">
       <div class="ct">Sales Funnel · 175 total deals</div>
-      <div class="fr"><div class="fs">Not Interested / MIA</div><div class="fb"><div style="width:100%;background:#30363d"></div></div><div class="fc">51 · $49,530</div></div>
-      <div class="fr"><div class="fs">CP Drip (passive)</div><div class="fb"><div style="width:72%;background:#1f6feb40"></div></div><div class="fc">37 · $2,207</div></div>
-      <div class="fr"><div class="fs">2025 Historical</div><div class="fb"><div style="width:58%;background:#1f6feb55"></div></div><div class="fc">30 · $49,337</div></div>
+      <div class="fr"><div class="fs">Not Interested / MIA</div><div class="fb"><div style="width:100%;background:#253848"></div></div><div class="fc">51 · $49,530</div></div>
+      <div class="fr"><div class="fs">CP Drip (passive)</div><div class="fb"><div style="width:72%;background:rgba(29,124,248,.35)"></div></div><div class="fc">37 · $2,207</div></div>
+      <div class="fr"><div class="fs">2025 Historical</div><div class="fb"><div style="width:58%;background:rgba(29,124,248,.5)"></div></div><div class="fc">30 · $49,337</div></div>
       <div class="fr"><div class="fs">Quote Sent 🔥</div><div class="fb"><div style="width:39%;background:var(--green)"></div></div><div class="fc">20 · $46,985</div></div>
       <div class="fr"><div class="fs">Stalling ⚡⚠️</div><div class="fb"><div style="width:23%;background:var(--amber)"></div></div><div class="fc">12 · $23,624</div></div>
       <div class="fr"><div class="fs">Booked</div><div class="fb"><div style="width:12%;background:var(--teal)"></div></div><div class="fc">6 · $13,054</div></div>
-      <div class="fr"><div class="fs">Paid ✅</div><div class="fb"><div style="width:7%;background:var(--green)"></div></div><div class="fc">7 · $12,389</div></div>
+      <div class="fr"><div class="fs">Paid ✅</div><div class="fb"><div style="width:7%;background:var(--gbright)"></div></div><div class="fc">7 · $12,389</div></div>
       <div class="fr"><div class="fs">Paid + Invoiced</div><div class="fb"><div style="width:4%;background:var(--gbright)"></div></div><div class="fc">2 · $5,640</div></div>
     </div>
     <div class="card">
@@ -125,7 +131,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="mp"><div class="ml">2025 Untapped Pipeline</div><div class="mv">$49,337</div></div>
       <div class="mp"><div class="ml">March Closed</div><div class="mv" style="color:var(--gbright)">$9,883</div></div>
       <div class="mp"><div class="ml">Feb Closed</div><div class="mv">$6,896</div></div>
-      <div class="mp"><div class="ml">All-Time Paid Revenue</div><div class="mv" style="font-size:15px">$18,029</div></div>
+      <div class="mp"><div class="ml">All-Time Paid Revenue</div><div class="mv" style="font-size:16px;color:var(--gbright)">$18,029</div></div>
       <div class="ins" style="--ic:var(--amber)">⚠️ Since Apr 20: Mohika Sehgal ($7,209), Dominic Ruso ($3,207) &amp; Kelsey Worboys ($3,029) moved to Not Interested — <strong>$13,445 pipeline lost in 8 days.</strong></div>
     </div>
   </div>
@@ -153,8 +159,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="ins" style="--ic:var(--red);margin-top:10px">— Trade Show → 0% conversion.&nbsp; — Meta Ads = best quality.&nbsp; 🔥 Referrals close 3–5× better — no formal program yet.</div>
     </div>
   </div>
-  <div class="card" style="margin-bottom:14px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="ct" style="margin:0">Priority Actions This Week</div><div style="font-size:11px;color:var(--muted)">Revenue impact</div></div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px"><div class="ct" style="margin:0">Priority Actions This Week</div><div style="font-size:11px;color:var(--muted)">Revenue impact</div></div>
     <div class="act"><div style="flex:1"><div class="ath">Call Shawn . ($10,251)</div><div class="atd">Largest open quote. "Call him" task overdue since Apr 15. Find the objection, solve it.</div></div><span class="bdg br">Overdue</span></div>
     <div class="act"><div style="flex:1"><div class="ath">Call Pat Palleschi ($3,996) + Iggy Ip ($3,883)</div><div class="atd">Both have overdue follow-up tasks. Ask what questions they have about the quote.</div></div><span class="bdg br">Overdue</span></div>
     <div class="act"><div style="flex:1"><div class="ath">Collect deposit — Paolo Empire ($1,600 booked)</div><div class="atd">Task overdue since Apr 25. One text: "Ready to lock you in!"</div></div><span class="bdg br">Overdue</span></div>
@@ -162,58 +168,33 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="act"><div style="flex:1"><div class="ath">Close the 6 booked jobs ($13,054)</div><div class="atd">Bo Chorny ($4,730), Krunal Trivedi ($2,798), Shalin Parikh ($1,770), Paolo Empire ($1,600), Zisby Malik ($1,580), Slavko Ristich ($576). Confirm install dates.</div></div><span class="bdg bb">Action</span></div>
     <div class="act"><div style="flex:1"><div class="ath">Build a referral program</div><div class="atd">Only 1 referral in 167 leads. Even $100 off per referral pays for itself on the first close.</div></div><span class="bdg bw">Strategic</span></div>
   </div>
-  <div class="card">
-    <div class="ct" style="margin-bottom:8px">Task Overview</div>
-    <div class="sbd" id="crm-task-sum"></div>
-  </div>
+  <div class="card"><div class="ct" style="margin-bottom:10px">Task Overview</div><div class="sbd" id="crm-task-sum"></div></div>
 </div>
-
 <!-- TASKS TAB -->
 <div id="pg-tasks" class="pg">
-  <div class="card" style="margin-bottom:14px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="ct" style="margin:0">Task Overview · Live from Zoho CRM</div><span style="font-size:11px;color:var(--dim)">Synced Apr 28, 2026</span></div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div class="ct" style="margin:0">Task Overview · Live from Zoho CRM</div><span style="font-size:11px;color:var(--dim)">Synced Apr 28, 2026</span></div>
     <div class="sbd" id="task-sum"></div>
   </div>
-  <div class="g2" style="margin-bottom:14px">
+  <div class="g2" style="margin-bottom:16px">
     <div class="card">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:600">🧑 Daniel's Tasks</span><span id="d-cnt" style="font-size:11px;color:var(--muted)"></span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;font-weight:700">🧑 Daniel's Tasks</span><span id="d-cnt" style="font-size:11px;color:var(--muted)"></span></div>
       <div id="d-tasks"></div>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:600">👩 Madison's Tasks</span><span id="m-cnt" style="font-size:11px;color:var(--muted)"></span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:13px;font-weight:700">👩 Madison's Tasks</span><span id="m-cnt" style="font-size:11px;color:var(--muted)"></span></div>
       <div id="m-tasks"></div>
     </div>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">All Open Tasks — Sorted by Due Date · Live from Zoho CRM</div>
+    <div class="ct" style="margin-bottom:12px">All Open Tasks — Sorted by Due Date · Live from Zoho CRM</div>
     <div class="tw"><table><thead><tr><th>Task</th><th>Contact</th><th>Owner</th><th>Due Date</th><th>Status</th></tr></thead><tbody id="all-t"></tbody></table></div>
-  </div>
-</div>
-
-<!-- APPROVALS TAB -->
-<div id="pg-approvals" class="pg">
-  <div class="g4">
-    <div class="card"><div class="kl">Needs Approval</div><div class="kv">0</div></div>
-    <div class="card"><div class="kl">Approved</div><div class="kv">0</div></div>
-    <div class="card"><div class="kl">Needs Revision</div><div class="kv">0</div></div>
-    <div class="card"><div class="kl">Total Queue</div><div class="kv">0</div></div>
-  </div>
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><div class="ct" style="margin:0">Approval Queue · Your command inbox</div><span class="bdg bw">Owner: Daniel · Due: 2026-04-28</span></div>
-    <div style="color:var(--ghost);font-size:12px;padding:20px 0;text-align:center">No approval items in queue.</div>
-    <div class="ins" style="--ic:var(--purple)">Execution path: local relay at <code>127.0.0.1:8787</code> updates shared approval state and can trigger sends for approved email/text items.</div>
-    <div style="margin-top:14px">
-      <div class="ct">Queue Coverage — What shows up here</div>
-      <div class="mp"><div class="ml">CRM Tasks</div><div style="font-size:11px;color:var(--muted)">Follow-ups and deal actions from Zoho</div></div>
-      <div class="mp"><div class="ml">Email Approvals</div><div style="font-size:11px;color:var(--muted)">Outbound drafts waiting for your signoff</div></div>
-      <div class="mp"><div class="ml">Social Content</div><div style="font-size:11px;color:var(--muted)">Captions, creative ideas, and posting plans</div></div>
-    </div>
   </div>
 </div>
 
 <!-- HISTORY TAB -->
 <div id="pg-history" class="pg">
-  <div class="card" style="margin-bottom:14px">
+  <div class="card" style="margin-bottom:16px">
     <div class="ct">Monthly Revenue Trend · 2026 YTD</div>
     <div class="g2">
       <div><div class="cwl"><canvas id="revC"></canvas></div></div>
@@ -225,15 +206,15 @@ tr:hover td{background:rgba(255,255,255,.02)}
           <tr><td>April 2026 (MTD)</td><td>$1,250</td></tr>
           <tr><td style="font-weight:700;color:var(--text)">2026 YTD Total</td><td style="color:var(--gbright)">$18,029</td></tr>
         </table>
-        <div class="ins" style="--ic:var(--green);margin-top:10px">🔥 March breakout: $9.8K, avg $2,471/job. April has $60K hot pipeline active. Feb revised to $6,896 — includes 3 closed deals (Paid + Paid+Invoiced stages).</div>
+        <div class="ins" style="--ic:var(--green);margin-top:10px">🔥 March breakout: $9.8K, avg $2,471/job. April has $60K hot pipeline active. Feb revised to $6,896 — includes 3 closed deals.</div>
       </div>
     </div>
   </div>
-  <div class="g2" style="margin-bottom:14px">
+  <div class="g2" style="margin-bottom:16px">
     <div class="card"><div class="ct">Lead Volume 2026 YTD</div><div class="cw"><canvas id="leadsC"></canvas></div></div>
     <div class="card"><div class="ct">Quote → Close % Snapshot</div><div class="cw"><canvas id="convC"></canvas></div></div>
   </div>
-  <div class="card" style="margin-bottom:14px"><div class="ct">Cumulative Revenue 2026</div><div class="cw"><canvas id="cumulC"></canvas></div></div>
+  <div class="card" style="margin-bottom:16px"><div class="ct">Cumulative Revenue 2026</div><div class="cw"><canvas id="cumulC"></canvas></div></div>
   <div class="g2">
     <div class="card">
       <div class="ct">Full Monthly Summary · 2026 YTD</div>
@@ -242,7 +223,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <tbody>
           <tr><td style="color:var(--muted)">Jan 2026</td><td>$0</td><td>0</td><td>—</td><td>79</td><td>0%</td><td>0%</td></tr>
           <tr><td style="color:var(--muted)">Feb 2026</td><td>$6,896</td><td>3</td><td>$2,299</td><td>28</td><td>10.7%</td><td>~20%</td></tr>
-          <tr style="background:rgba(35,134,54,.07)"><td style="color:var(--muted)">Mar 2026 🏆</td><td>$9,883</td><td>4</td><td>$2,471</td><td>53</td><td>7.5%</td><td>24%</td></tr>
+          <tr style="background:rgba(35,134,54,.06)"><td style="color:var(--muted)">Mar 2026 🏆</td><td>$9,883</td><td>4</td><td>$2,471</td><td>53</td><td>7.5%</td><td>24%</td></tr>
           <tr><td style="color:var(--muted)">Apr 2026 MTD</td><td>$1,250</td><td>2</td><td>$625</td><td>~7</td><td>4.0%</td><td>TBD</td></tr>
         </tbody>
       </table></div>
@@ -260,45 +241,15 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- AGENTS TAB -->
-<div id="pg-agents" class="pg">
-  <div class="card" style="margin-bottom:14px">
-    <div class="ct">Active Agents 🦾</div>
-    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)"><div style="font-size:22px">🤖</div><div><div style="font-size:13px;font-weight:600">Daniel (Main Agent)</div><div style="font-size:11px;color:var(--muted)">CEO-mode · anthropic/claude-sonnet-4-6 — <span style="color:var(--gbright)">● Online via Cowork</span></div></div></div>
-    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)"><div style="font-size:22px">🤝</div><div><div style="font-size:13px;font-weight:600">Sub-Agent Pool</div><div style="font-size:11px;color:var(--muted)">Spawned on demand · sonnet-4-6 · Idle</div></div></div>
-    <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 0"><div style="font-size:22px">💓</div><div><div style="font-size:13px;font-weight:600">Heartbeat</div><div style="font-size:11px;color:var(--muted)">Cron-driven · project queue runner · Every 30 min</div></div></div>
-  </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="ct">Project Queue — memory/projects.md</div>
-    <div class="ins" style="--ic:var(--green)">✅ Zoho CRM Analysis + Campaign Draft — Analyzed 157 leads, 160 total. Created "New Lead Welcome Series" campaign (DRAFT). Completed 2026-03-30 · 5 tasks done</div>
-    <div style="margin-top:10px;color:var(--dim);font-size:12px">🗭 Queue is empty. Add projects to memory/projects.md — Claude executes them autonomously on every heartbeat.</div>
-  </div>
-  <div class="g2">
-    <div class="card">
-      <div class="ct">Scheduled Cron Jobs · Gateway scheduler</div>
-      <div class="mp"><div class="ml">Heartbeat</div><div><span class="bdg bg">Active</span> <span style="font-size:11px;color:var(--muted)">Every 30 min</span></div></div>
-      <div class="mp"><div class="ml">Morning Brief</div><div><span class="bdg bg">Active</span> <span style="font-size:11px;color:var(--muted)">Daily 7:00 AM ET</span></div></div>
-      <div class="ins" style="--ic:var(--purple)">All cron jobs use anthropic/claude-sonnet-4-6. Tell Claude to schedule anything.</div>
-    </div>
-    <div class="card">
-      <div class="ct">System Health</div>
-      <div class="mp"><div class="ml">Cowork Gateway</div><span class="bdg bg">Online</span></div>
-      <div class="mp"><div class="ml">Zoho CRM</div><span class="bdg bg">Connected</span></div>
-      <div class="mp"><div class="ml">CRM Last Sync</div><div class="mv">Apr 28, 2026</div></div>
-      <div class="mp"><div class="ml">Daily Token Budget</div><div class="mv">$5.00 hard limit</div></div>
-    </div>
-  </div>
-</div>
-
 <!-- PIPELINE TAB -->
 <div id="pg-pipeline" class="pg">
   <div class="g3">
-    <div class="card"><div class="kl">Total Pipeline (Active)</div><div class="kv">$88,543</div><div class="ks">All active stages</div></div>
-    <div class="card"><div class="kl">Highest Risk</div><div class="kv" style="color:var(--amber)">$23,624</div><div class="ks">12 stalling deals</div></div>
-    <div class="card"><div class="kl">Expected Close (24%)</div><div class="kv">$11,276</div><div class="ks">If quote rate holds</div></div>
+    <div class="card" style="border-top:2px solid var(--blue)"><div class="kl">Total Pipeline (Active)</div><div class="kv">$88,543</div><div class="ks">All active stages</div></div>
+    <div class="card" style="border-top:2px solid var(--amber)"><div class="kl">Highest Risk</div><div class="kv" style="color:var(--amber)">$23,624</div><div class="ks">12 stalling deals</div></div>
+    <div class="card" style="border-top:2px solid var(--gbright)"><div class="kl">Expected Close (24%)</div><div class="kv">$11,276</div><div class="ks">If quote rate holds</div></div>
   </div>
-  <div class="g2" style="margin-bottom:14px">
-    <div class="card"><div class="ct" style="margin-bottom:8px">Pipeline by Stage</div><div class="cwl"><canvas id="pipC"></canvas></div></div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card"><div class="ct" style="margin-bottom:10px">Pipeline by Stage</div><div class="cwl"><canvas id="pipC"></canvas></div></div>
     <div class="card">
       <div class="ct">Win Probability Forecast</div>
       <div class="mp"><div class="ml">Quote Sent ($46,985) @ 24%</div><div class="mv" style="color:var(--gbright)">$11,276</div></div>
@@ -306,24 +257,24 @@ tr:hover td{background:rgba(255,255,255,.02)}
       <div class="mp"><div class="ml">Booked ($13,054) @ 85%</div><div class="mv" style="color:var(--gbright)">$11,096</div></div>
       <div class="mp"><div class="ml">Tentative ($4,880) @ 50%</div><div class="mv">$2,440</div></div>
       <hr style="border:none;border-top:1px solid var(--border);margin:8px 0">
-      <div class="mp"><div class="ml" style="font-weight:700;color:var(--text)">Total Weighted Pipeline</div><div class="mv" style="color:var(--gbright);font-size:15px">~$26,702</div></div>
+      <div class="mp"><div class="ml" style="font-weight:700;color:var(--text)">Total Weighted Pipeline</div><div class="mv" style="color:var(--gbright);font-size:16px">~$26,702</div></div>
       <div class="ins" style="--ic:var(--green)">🎯 Close 3 of the top 5 quotes and April beats all of 2026 YTD. Priority: Shawn . ($10K) + the 6 booked jobs ($13K).</div>
     </div>
   </div>
   <div class="card">
-    <div class="ct" style="margin-bottom:10px">Full Pipeline — All Active Deals</div>
+    <div class="ct" style="margin-bottom:12px">Full Pipeline — All Active Deals</div>
     <div class="tw"><table><thead><tr><th>#</th><th>Contact</th><th>Stage</th><th>Value</th><th>Close Date</th><th>Action</th></tr></thead><tbody id="pip-body"></tbody></table></div>
   </div>
 </div>
 
 <!-- ANALYTICS TAB -->
 <div id="pg-analytics" class="pg">
-  <div class="g3" style="margin-bottom:14px">
+  <div class="g3" style="margin-bottom:16px">
     <div class="card"><div class="ct">Revenue by Month</div><div class="cwm"><canvas id="an-rev"></canvas></div></div>
     <div class="card"><div class="ct">Avg Job Size (closed only)</div><div class="cwm"><canvas id="an-avg"></canvas></div></div>
     <div class="card"><div class="ct">Cumulative Revenue 2026</div><div class="cwm"><canvas id="an-cum"></canvas></div></div>
   </div>
-  <div class="g3" style="margin-bottom:14px">
+  <div class="g3" style="margin-bottom:16px">
     <div class="card"><div class="ct">Lead → Close Rate</div><div class="cwm"><canvas id="an-lc"></canvas></div></div>
     <div class="card"><div class="ct">Quote → Close Rate</div><div class="cwm"><canvas id="an-qc"></canvas></div></div>
     <div class="card"><div class="ct">Monthly Lead Volume</div><div class="cwm"><canvas id="an-ld"></canvas></div></div>
@@ -341,13 +292,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<div class="foot">Sunquell Mission Control · Data: Zoho CRM (synced Apr 28, 2026) · Built by Claude (AI Agent) via Cowork</div>
+<div class="foot">Sunquell Mission Control · Data: Zoho CRM (synced Apr 28, 2026) · Built by Claude (AI Agent) via Cowork · brianjameson-ui.github.io/sunquell-dashboard</div>
 <script>
-// Clock
 function tick(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit',timeZone:'America/Toronto'});}
 tick();setInterval(tick,10000);
-
-// Tab switching
 const ci={};
 function showTab(n,el){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
@@ -358,10 +306,8 @@ function showTab(n,el){
   if(n==='pipeline'&&!ci.p){ci.p=1;initPipeline();renderPipeline();}
   if(n==='analytics'&&!ci.a){ci.a=1;initAnalytics();}
 }
-
 const TODAY='2026-04-28';
 const Td=new Date(TODAY+'T00:00:00');
-
 const TASKS=[
   {s:"Call him",st:"In Progress",d:"2026-04-15",c:"Shawn .",o:"Daniel Mueller"},
   {s:"Follow up",st:"In Progress",d:"2026-04-17",c:"Anny Ali",o:"Daniel Mueller"},
@@ -427,7 +373,6 @@ const PIPE=[
   {c:"Slavko Ristich",sg:"Booked",a:575.89,dt:"—",ac:"📅 Confirm install"},
   {c:"Steven Vacilotto",sg:"Quote Sent",a:525.14,dt:"—",ac:"📞 Follow up"},
 ];
-
 function renderTasks(){
   const ov=TASKS.filter(t=>new Date(t.d+'T00:00:00')<Td);
   const today=TASKS.filter(t=>t.d===TODAY);
@@ -437,7 +382,6 @@ function renderTasks(){
   const badgeN=ov.length+today.length;
   document.getElementById('tb1').textContent=badgeN;
   document.getElementById('tb2').textContent=badgeN;
-
   function makeSB(id){
     document.getElementById(id).innerHTML=
       `<div class="sb"><div class="sbv" style="color:var(--red)">${ov.length}</div><div class="sbl">Overdue</div></div>`+
@@ -448,7 +392,6 @@ function renderTasks(){
   makeSB('task-sum'); makeSB('crm-task-sum');
   document.getElementById('d-cnt').textContent=dan.length+' tasks';
   document.getElementById('m-cnt').textContent=mad.length+' tasks';
-
   function rows(list){
     if(!list.length)return'<div style="color:var(--ghost);font-size:12px;padding:10px 0">No open tasks</div>';
     return list.slice(0,9).map(t=>{
@@ -460,7 +403,6 @@ function renderTasks(){
   }
   document.getElementById('d-tasks').innerHTML=rows(dan);
   document.getElementById('m-tasks').innerHTML=rows(mad);
-
   const sorted=[...TASKS].sort((a,b)=>new Date(a.d)-new Date(b.d));
   document.getElementById('all-t').innerHTML=sorted.map(t=>{
     const isOv=new Date(t.d+'T00:00:00')<Td;
@@ -478,34 +420,29 @@ function renderPipeline(){
     return`<tr><td class="rnk">${String(i+1).padStart(2,'0')}</td><td style="font-weight:600">${d.c}</td><td><span style="color:${col};font-size:11px">${d.sg}</span></td><td style="font-weight:600">$${d.a.toLocaleString('en-CA',{maximumFractionDigits:0})}</td><td class="tr">${d.dt}</td><td class="tr">${d.ac}</td></tr>`;
   }).join('');
 }
-
-Chart.defaults.color='#6e7681';Chart.defaults.borderColor='#30363d';
+Chart.defaults.color='#6e8aa0';Chart.defaults.borderColor='#1c2b3a';
 Chart.defaults.font.family='-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
 Chart.defaults.font.size=11;
-
-function mkBar(id,labels,data,colors){return new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors||'#1f6feb',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}});}
-function mkLine(id,labels,data,color){return new Chart(document.getElementById(id),{type:'line',data:{labels,datasets:[{data,borderColor:color,backgroundColor:color+'18',tension:.4,fill:true,pointBackgroundColor:color,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}});}
-
+function mkBar(id,labels,data,colors){return new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors||'#1d7cf8',borderRadius:5,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}});}
+function mkLine(id,labels,data,color){return new Chart(document.getElementById(id),{type:'line',data:{labels,datasets:[{data,borderColor:color,backgroundColor:color+'18',tension:.4,fill:true,pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>'$'+v.toLocaleString()}}}}});}
 function initHistory(){
-  mkBar('revC',['Jan','Feb','Mar','Apr(MTD)'],[0,6896,9883,1250],['#1f6feb','#1f6feb','#238636','#d29922']);
-  new Chart(document.getElementById('leadsC'),{type:'bar',data:{labels:['Jan','Feb','Mar','Apr'],datasets:[{data:[79,28,53,7],backgroundColor:'#1f6feb',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'}}}}});
-  new Chart(document.getElementById('convC'),{type:'line',data:{labels:['Jan','Feb','Mar'],datasets:[{data:[0,20,24],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.08)',tension:.4,fill:true,pointBackgroundColor:'#22c55e',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>v+'%'},min:0,max:40}}}});
-  mkLine('cumulC',['Jan','Feb','Mar','Apr'],[0,6896,16779,18029],'#3b82f6');
+  mkBar('revC',['Jan','Feb','Mar','Apr(MTD)'],[0,6896,9883,1250],['#1c2b3a','#1d7cf8','#3fb950','#e3a008']);
+  new Chart(document.getElementById('leadsC'),{type:'bar',data:{labels:['Jan','Feb','Mar','Apr'],datasets:[{data:[79,28,53,7],backgroundColor:'#1d7cf8',borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'}}}}});
+  new Chart(document.getElementById('convC'),{type:'line',data:{labels:['Jan','Feb','Mar'],datasets:[{data:[0,20,24],borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,.08)',tension:.4,fill:true,pointBackgroundColor:'#3fb950',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>v+'%'},min:0,max:40}}}});
+  mkLine('cumulC',['Jan','Feb','Mar','Apr'],[0,6896,16779,18029],'#1d7cf8');
 }
-
 function initPipeline(){
-  new Chart(document.getElementById('pipC'),{type:'doughnut',data:{labels:['Quote Sent','Booked','Stalling','Tentative'],datasets:[{data:[46985,13054,23624,4880],backgroundColor:['#238636','#0d9488','#d29922','#1f6feb'],borderColor:'#0d1117',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:14,usePointStyle:true}},tooltip:{callbacks:{label:c=>' $'+c.raw.toLocaleString()}}},cutout:'65%'}});
+  new Chart(document.getElementById('pipC'),{type:'doughnut',data:{labels:['Quote Sent','Booked','Stalling','Tentative'],datasets:[{data:[46985,13054,23624,4880],backgroundColor:['#238636','#0d9488','#e3a008','#1d7cf8'],borderColor:'#080d13',borderWidth:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true}},tooltip:{callbacks:{label:c=>' $'+c.raw.toLocaleString()}}},cutout:'68%'}});
 }
-
 function initAnalytics(){
   const m=['Jan','Feb','Mar','Apr(MTD)'];
-  mkBar('an-rev',m,[0,6896,9883,1250],['#30363d','#1f6feb','#238636','#d29922']);
-  new Chart(document.getElementById('an-avg'),{type:'bar',data:{labels:m,datasets:[{data:[null,2299,2471,625],backgroundColor:['#30363d','#1f6feb','#238636','#d29922'],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>'$'+v.toLocaleString()},min:0}}}});
-  mkLine('an-cum',m,[0,6896,16779,18029],'#3b82f6');
-  new Chart(document.getElementById('an-lc'),{type:'line',data:{labels:m,datasets:[{data:[0,10.7,7.5,4.0],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.08)',tension:.4,fill:true,pointBackgroundColor:'#10b981',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>v+'%'},min:0,max:15}}}});
-  new Chart(document.getElementById('an-qc'),{type:'line',data:{labels:['Jan','Feb','Mar'],datasets:[{data:[0,20,24],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.08)',tension:.4,fill:true,pointBackgroundColor:'#22c55e',pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{callback:v=>v+'%'},min:0,max:40}}}});
-  new Chart(document.getElementById('an-ld'),{type:'bar',data:{labels:m,datasets:[{data:[79,28,53,7],backgroundColor:'#1f6feb',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'}}}}});
-  new Chart(document.getElementById('an-dc'),{type:'bar',data:{labels:m,datasets:[{data:[0,3,4,2],backgroundColor:['#30363d','#1f6feb','#238636','#d29922'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#161b22'},ticks:{stepSize:1}}}}});
+  mkBar('an-rev',m,[0,6896,9883,1250],['#1c2b3a','#1d7cf8','#3fb950','#e3a008']);
+  new Chart(document.getElementById('an-avg'),{type:'bar',data:{labels:m,datasets:[{data:[null,2299,2471,625],backgroundColor:['#1c2b3a','#1d7cf8','#3fb950','#e3a008'],borderRadius:5,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>'$'+v.toLocaleString()},min:0}}}});
+  mkLine('an-cum',m,[0,6896,16779,18029],'#1d7cf8');
+  new Chart(document.getElementById('an-lc'),{type:'line',data:{labels:m,datasets:[{data:[0,10.7,7.5,4.0],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.08)',tension:.4,fill:true,pointBackgroundColor:'#10b981',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>v+'%'},min:0,max:15}}}});
+  new Chart(document.getElementById('an-qc'),{type:'line',data:{labels:['Jan','Feb','Mar'],datasets:[{data:[0,20,24],borderColor:'#3fb950',backgroundColor:'rgba(63,185,80,.08)',tension:.4,fill:true,pointBackgroundColor:'#3fb950',pointRadius:4,pointHoverRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{callback:v=>v+'%'},min:0,max:40}}}});
+  new Chart(document.getElementById('an-ld'),{type:'bar',data:{labels:m,datasets:[{data:[79,28,53,7],backgroundColor:'#1d7cf8',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'}}}}});
+  new Chart(document.getElementById('an-dc'),{type:'bar',data:{labels:m,datasets:[{data:[0,3,4,2],backgroundColor:['#1c2b3a','#1d7cf8','#3fb950','#e3a008'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'#0f1621'},ticks:{stepSize:1}}}}});
 }
 </script>
 </body>
