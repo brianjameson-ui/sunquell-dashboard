@@ -1,21 +1,21 @@
 """
-Sunquell Mission Control — Nightly Dashboard Updater
+Sunquell Mission Control â Nightly Dashboard Updater
 Runs via GitHub Actions. Pulls fresh data from Zoho CRM and updates index.html.
 Required env vars: ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN
 """
 import os, re, json, requests
 from datetime import date, datetime
 
-ZOHO_TOKEN_URL = "https://accounts.zoho.com/oauth/v2/token"
+ZOHO_TOKEN_URL = "https://accounts.zohocloud.ca/oauth/v2/token"
 ZOHO_COQL_URL  = "https://www.zohoapis.com/crm/v2/coql"
 
 OWNER_MAP = {"Mueller": "Daniel Mueller", "Parsons": "Madison Parsons"}
 
 STAGE_ACTION = {
-    "Quote Sent":       "📞 Follow up",
-    "Booked":           "📅 Confirm install",
-    "Stalling":         "⚠️ Recovery email",
-    "Tentative Booking":"📋 Confirm",
+    "Quote Sent":       "ð Follow up",
+    "Booked":           "ð Confirm install",
+    "Stalling":         "â ï¸ Recovery email",
+    "Tentative Booking":"ð Confirm",
 }
 
 
@@ -49,7 +49,7 @@ def build_tasks_js(rows, today):
         owner = OWNER_MAP.get(owner_raw, owner_raw)
         due = t.get("Due_Date") or ""
         status = "In Progress" if due and due <= today else "Not Due Yet"
-        out.append(f'  {{s:"{subject}",st:"{status}",d:"{due}",c:"—",o:"{owner}"}}')
+        out.append(f'  {{s:"{subject}",st:"{status}",d:"{due}",c:"â",o:"{owner}"}}')
     return "const TASKS=[\n" + ",\n".join(out) + "\n];"
 
 
@@ -63,8 +63,8 @@ def build_pipe_js(all_deals):
         contact = (cn.get("name", "") if isinstance(cn, dict) else "") or d.get("Deal_Name", "")
         contact = contact.replace('"', '\\"')
         stage = d.get("Stage", "")
-        dt = d.get("Closing_Date") or "—"
-        ac = STAGE_ACTION.get(stage, "📋 Action needed")
+        dt = d.get("Closing_Date") or "â"
+        ac = STAGE_ACTION.get(stage, "ð Action needed")
         items.append({"c": contact, "sg": stage, "a": amount, "dt": dt, "ac": ac})
 
     items.sort(key=lambda x: x["a"], reverse=True)
@@ -83,7 +83,7 @@ def main():
     # Pull tasks
     tasks = coql(token, "SELECT Subject, Status, Due_Date, Owner FROM Tasks WHERE Status != 'Completed' LIMIT 50")
     if not tasks:
-        print("ERROR: No tasks returned — aborting to avoid blanking dashboard")
+        print("ERROR: No tasks returned â aborting to avoid blanking dashboard")
         return
 
     # Pull pipeline by stage
@@ -94,7 +94,7 @@ def main():
     all_deals = quotes + booked + stalling + tentative
 
     if not all_deals:
-        print("ERROR: No deals returned — aborting to avoid blanking dashboard")
+        print("ERROR: No deals returned â aborting to avoid blanking dashboard")
         return
 
     print(f"Fetched {len(tasks)} tasks, {len(all_deals)} deals")
